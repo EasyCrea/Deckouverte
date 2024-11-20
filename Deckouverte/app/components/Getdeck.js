@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, Linking } from 'react-native';
 
 export function Getdeck() {
   const [deck, setDeck] = useState(null);
@@ -52,12 +52,15 @@ export function Getdeck() {
   }
 
   return (
+
     <View>
     <Text style={styles.title}>Decks récupérés</Text>
     {deck.decks.map((item, index) => (
-      <View key={index}>
-        <Text>Le titre : {item.titre_deck}</Text>
+      <View key={index} style={styles.card}>
+        <Text style={styles.texte}>Le titre : {item.titre_deck}</Text>
         <Text>le début : {item.date_debut_deck}</Text>
+        <Text>la fin : {item.date_fin_deck}</Text>
+        <Text>Nombre de cartes : {item.nb_cartes}</Text>
       </View>
       
     ))}
@@ -71,11 +74,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
   },
+  card:{
+    backgroundColor: 'lightblue',
+    padding: 10,
+    marginBottom: 10,
+  }
 });
