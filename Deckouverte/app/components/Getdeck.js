@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
 
 export function Getdeck() {
   const [deck, setDeck] = useState(null);
@@ -9,7 +9,7 @@ export function Getdeck() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/posts/1');
+        const response = await fetch('http://localhost:8000/createur');
         if (!response.ok) {
           throw new Error('Échec de la récupération des données');
         }
@@ -52,9 +52,17 @@ export function Getdeck() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Deck bien récupérer</Text>
+    <View>
+    <Text style={styles.title}>Decks récupérés</Text>
+    {deck.decks.map((item, index) => (
+      <View key={index}>
+        <Text>Le titre : {item.titre_deck}</Text>
+        <Text>le début : {item.date_debut_deck}</Text>
+      </View>
+      
+    ))}
     </View>
+
   );
 }
 
