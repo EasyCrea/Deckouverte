@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 
 export default function GameScreen() {
+    const { id } = useLocalSearchParams();
   const router = useRouter();
 
   return (
@@ -14,6 +15,7 @@ export default function GameScreen() {
       >
         <Text style={styles.buttonText}>Retour à l'accueil</Text>
       </Pressable>
+      <Text>Deck id : {id}</Text>
     </View>
   );
 }

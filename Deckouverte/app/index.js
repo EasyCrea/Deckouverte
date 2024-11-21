@@ -1,7 +1,6 @@
 import { View,  Pressable, Text, StyleSheet } from "react-native";
-import { Getdeck } from './components/Getdeck';
 import { useRouter } from 'expo-router';
-import { Stack } from "expo-router";
+import { Getdeck } from "./components/Getdeck";
 
 
 export default function Index() {
@@ -14,13 +13,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-    <Getdeck />
-    <Pressable 
-        style={styles.button}
-        onPress={() => router.push('/jeu')}
-      >
-        <Text style={styles.buttonText}>Commencer le Jeu</Text>
-      </Pressable>
+      <Getdeck />
     </View>
   );
 }
