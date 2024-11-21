@@ -9,7 +9,6 @@ export default function GameScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Écran de Jeu</Text>
       <GetDeckById deckId={id} />
       <Pressable 
         style={styles.button}

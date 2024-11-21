@@ -61,10 +61,11 @@ export function GetDeckById({ deckId }) {
       </View>
     );
   }
+  console.log(deck);
 
   return (
     <View style={styles.main}>
-        <Text style={styles.title}>Nous sommes dans le deck {deck.titre_deck}</Text>
+        <Text style={styles.title}>Nous sommes dans le deck {deck.deck.titre_deck}</Text>
     </View>
   );
 }
