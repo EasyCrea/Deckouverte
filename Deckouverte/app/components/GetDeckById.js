@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 
-export function Getdeck() {
+export function GetDeckById({ deckId }) {
   const router = useRouter();
 
   const [deck, setDeck] = useState(null);
@@ -18,7 +18,7 @@ export function Getdeck() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8000/createur");
+        const response = await fetch(`http://localhost:8000/createur/deck/${deckId}`);
         if (!response.ok) {
           throw new Error("Échec de la récupération des données");
         }
@@ -64,36 +64,7 @@ export function Getdeck() {
 
   return (
     <View style={styles.main}>
-        <Text style={styles.title}>Bienvenue sur Deckouverte</Text>
-        {deck.decks.map((item, index) => (
-          <View key={item.id || index} style={styles.container}>
-            <Pressable
-              style={styles.button}
-              onPress={() => router.push(`/jeu?id=${item.id_deck}`)}
-            >
-              <View style={styles.card}>
-                <Text style={styles.texte}>Le titre : {item.titre_deck}</Text>
-                <View style={styles.information}>
-                  <Text style={styles.cardDetails}>
-                    le début : {item.date_debut_deck}
-                  </Text>
-                  <Text style={styles.cardDetails}>
-                    la fin : {item.date_fin_deck}
-                  </Text>
-                  <Text style={styles.cardDetails}>
-                    Nombre de cartes : {item.nb_cartes}
-                  </Text>
-                </View>
-              </View>
-            </Pressable>
-            <Pressable
-              style={styles.button}
-              onPress={() => router.push(`/details?id=${item.id_deck}`)}
-            >
-              <Text style={styles.button}>Détails</Text>
-            </Pressable>
-          </View>
-        ))}
+        <Text style={styles.title}>Nous sommes dans le deck {deck.titre_deck}</Text>
     </View>
   );
 }
