@@ -200,7 +200,7 @@ export default function CardSwipe({ deckId }) {
           <Text style={styles.scoreValueText}>{population}</Text>
         </View>
         <View style={[styles.scoreBox, styles.centeredScore]}>
-          <Text style={styles.scoreLabelText}>Argent</Text>
+          <Text style={styles.scoreLabelText}>Finance</Text>
           <Text style={styles.scoreValueText}>{argent}</Text>
         </View>
         {/* Ajout du nombre de cartes restantes */}
