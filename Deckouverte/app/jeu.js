@@ -1,26 +1,27 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import CardSwipe from './components/Getcard'; // Corrected import path
 
 export default function GameScreen() {
-    const { id } = useLocalSearchParams();
+  const { id } = useLocalSearchParams();
   const router = useRouter();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Écran de Jeu</Text>
+      <Text style={styles.title}>Jeu</Text>
       <Pressable 
-        style={styles.button}
+        style={styles.button} 
         onPress={() => router.back()}
       >
-        <Text style={styles.buttonText}>Retour à l'accueil</Text>
+        <Text style={styles.buttonText}>Retour</Text>
       </Pressable>
-      <Text>Deck id : {id}</Text>
+      
+      <CardSwipe deckId={id} />
     </View>
   );
 }
 
-// Styles communs
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -38,6 +39,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
+    marginBottom: 20,
   },
   buttonText: {
     color: 'white',
