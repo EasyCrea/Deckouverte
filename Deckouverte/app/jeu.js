@@ -1,29 +1,24 @@
-import { View,  Pressable, Text, StyleSheet } from "react-native";
-import { Getdeck } from './components/Getdeck';
+import React from 'react';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Stack } from "expo-router";
 
-
-export default function Index() {
+export default function GameScreen() {
   const router = useRouter();
+
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-    <Getdeck />
-    <Pressable 
+    <View style={styles.container}>
+      <Text style={styles.title}>Écran de Jeu</Text>
+      <Pressable 
         style={styles.button}
-        onPress={() => router.push('/jeu')}
+        onPress={() => router.back()}
       >
-        <Text style={styles.buttonText}>Commencer le Jeu</Text>
+        <Text style={styles.buttonText}>Retour à l'accueil</Text>
       </Pressable>
     </View>
   );
 }
+
+// Styles communs
 const styles = StyleSheet.create({
   container: {
     flex: 1,
