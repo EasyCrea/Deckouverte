@@ -1,26 +1,23 @@
-
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import GetCard from './components/Getcard';
+import CardSwipe from './components/Getcard'; // Corrected import path
 
 export default function GameScreen() {
-  const { id } = useLocalSearchParams(); // Récupère l'id du deck
+  const { id } = useLocalSearchParams();
   const router = useRouter();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Écran de Jeu</Text>
+      <Text style={styles.title}>Jeu</Text>
       <Pressable 
         style={styles.button} 
         onPress={() => router.back()}
       >
-        <Text style={styles.buttonText}>Retour à l'accueil</Text>
+        <Text style={styles.buttonText}>Retour</Text>
       </Pressable>
-      <Text>Deck id : {id}</Text>
-
-      {}
-      <GetCard deckId={id} />
+      
+      <CardSwipe deckId={id} />
     </View>
   );
 }
