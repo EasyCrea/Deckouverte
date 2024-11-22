@@ -7,7 +7,6 @@ import {
   Dimensions, 
   StyleSheet 
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Coins } from 'lucide-react-native'; 
 import { Users } from 'lucide-react-native'; 
 const { width, height } = Dimensions.get('window');

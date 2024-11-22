@@ -69,7 +69,7 @@ export function Getdeck() {
           <View key={item.id || index} style={styles.container}>
             <Pressable
               style={styles.button}
-              onPress={() => router.push(`/jeu?id=${item.id_deck}`)}
+              onPress={() => router.push(`/page/jeu?id=${item.id_deck}`)}
             >
               <View style={styles.card}>
                 <Text style={styles.texte}>Le titre : {item.titre_deck}</Text>
