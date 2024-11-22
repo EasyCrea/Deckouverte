@@ -7,16 +7,13 @@ import {
   Dimensions, 
   StyleSheet 
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Coins } from 'lucide-react-native'; 
 import { Users } from 'lucide-react-native'; 
 const { width, height } = Dimensions.get('window');
 
 export default function CardSwipe({ deckId }) {
-  const navigation = useNavigation();
-  const [isIntroCard, setIsIntroCard] = useState(true);
-  const [hasStarted, setHasStarted] = useState(false);
+  // ... autres états restent les mêmes ...
   const [cards, setCards] = useState([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [population, setPopulation] = useState(0);
@@ -32,9 +29,11 @@ export default function CardSwipe({ deckId }) {
   const cardRotation = useRef(new Animated.Value(0)).current;
   const cardScale = useRef(new Animated.Value(1)).current;  
   const cardOpacity = useRef(new Animated.Value(1)).current;
+  // Nouvelles animations pour le texte
   const leftTextOpacity = useRef(new Animated.Value(0)).current;
   const rightTextOpacity = useRef(new Animated.Value(0)).current;
 
+  // ... fetchCards reste le même ...
   useEffect(() => {
     const fetchCards = async () => {
       try {
@@ -51,6 +50,97 @@ export default function CardSwipe({ deckId }) {
     };
     fetchCards();
   }, [deckId]);
+
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onPanResponderMove: (event, gestureState) => {
+      Animated.event([null, { dx: pan.x }], { useNativeDriver: false })(event, gestureState);
+
+      Animated.timing(cardRotation, {
+        toValue: gestureState.dx / width,
+        duration: 0,
+        useNativeDriver: true
+      }).start();
+
+      const swipeDirection = gestureState.dx > 0 ? 'right' : 'left';
+      const currentCard = cards[currentCardIndex];
+      
+      setIsCardCentered(false);
+
+      // Animer l'opacité du texte en fonction de la direction du swipe
+      Animated.parallel([
+        Animated.timing(leftTextOpacity, {
+          toValue: swipeDirection === 'left' ? 1 : 0,
+          duration: 150,
+          useNativeDriver: true
+        }),
+        Animated.timing(rightTextOpacity, {
+          toValue: swipeDirection === 'right' ? 1 : 0,
+          duration: 150,
+          useNativeDriver: true
+        })
+      ]).start();
+
+      if (swipeDirection === 'left') {
+        processValueDisplay(currentCard.valeurs_choix1, true);
+        setRightValue(null);
+        setRightText(null);
+      } else {
+        processValueDisplay(currentCard.valeurs_choix2, false);
+        setLeftValue(null);
+        setLeftText(null);
+      }
+
+      const scaleValue = 1 - Math.abs(gestureState.dx) / (width * 2);
+      cardScale.setValue(scaleValue);
+      
+      const opacityValue = 1 - Math.abs(gestureState.dx) / (width * 1.5);
+      cardOpacity.setValue(opacityValue);
+    },
+    onPanResponderRelease: (event, gestureState) => {
+      const swipeThreshold = width * 0.3;
+
+      if (Math.abs(gestureState.dx) > swipeThreshold) {
+        const swipeDirection = gestureState.dx > 0 ? 'right' : 'left';
+        handleCardSwipe(swipeDirection);
+      } else {
+        Animated.parallel([
+          Animated.spring(pan, {
+            toValue: { x: 0, y: 0 },
+            useNativeDriver: true
+          }),
+          Animated.spring(cardRotation, {
+            toValue: 0,
+            useNativeDriver: true
+          }),
+          Animated.spring(cardScale, {
+            toValue: 1,
+            useNativeDriver: true
+          }),
+          Animated.spring(cardOpacity, {
+            toValue: 1,
+            useNativeDriver: true
+          }),
+          Animated.timing(leftTextOpacity, {
+            toValue: 0,
+            duration: 150,
+            useNativeDriver: true
+          }),
+          Animated.timing(rightTextOpacity, {
+            toValue: 0,
+            duration: 150,
+            useNativeDriver: true
+          })
+        ]).start(() => {
+          setIsCardCentered(true);
+          setLeftValue(null);
+          setRightValue(null);
+          setLeftText(null);
+          setRightText(null);
+        });
+      }
+    }
+  });
 
   const processValueDisplay = (valueString, isLeft) => {
     const values = valueString.split(/[,.]/).map(val => val.trim());
@@ -75,35 +165,9 @@ export default function CardSwipe({ deckId }) {
     }
   };
 
-  const handleIntroCardSwipe = (direction) => {
-    if (direction === 'left') {
-      setIsIntroCard(false);
-      setHasStarted(true);
-    } else {
-      navigation.navigate('Index');
-    }
-
-    Animated.parallel([
-      Animated.timing(pan, {
-        toValue: { 
-          x: direction === 'right' ? width : -width, 
-          y: 0 
-        },
-        duration: 300,
-        useNativeDriver: true
-      }),
-      Animated.timing(cardOpacity, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true
-      })
-    ]).start(() => {
-      pan.setValue({ x: 0, y: 0 });
-      cardOpacity.setValue(1);
-    });
-  };
-
+  // ... handleCardSwipe reste le même ...
   const handleCardSwipe = (direction) => {
+    // ... code existant ...
     const currentCard = cards[currentCardIndex];
 
     const getValues = (choice) => {
@@ -173,109 +237,6 @@ export default function CardSwipe({ deckId }) {
     });
   };
 
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-    onPanResponderMove: (event, gestureState) => {
-      Animated.event([null, { dx: pan.x }], { useNativeDriver: false })(event, gestureState);
-
-      if (isIntroCard) {
-        const swipeDirection = gestureState.dx > 0 ? 'right' : 'left';
-        setLeftText(swipeDirection === 'left' ? "Commencer" : null);
-        setRightText(swipeDirection === 'right' ? "Retour" : null);
-        return;
-      }
-
-      Animated.timing(cardRotation, {
-        toValue: gestureState.dx / width,
-        duration: 0,
-        useNativeDriver: true
-      }).start();
-
-      const swipeDirection = gestureState.dx > 0 ? 'right' : 'left';
-      const currentCard = cards[currentCardIndex];
-      
-      setIsCardCentered(false);
-
-      Animated.parallel([
-        Animated.timing(leftTextOpacity, {
-          toValue: swipeDirection === 'left' ? 1 : 0,
-          duration: 150,
-          useNativeDriver: true
-        }),
-        Animated.timing(rightTextOpacity, {
-          toValue: swipeDirection === 'right' ? 1 : 0,
-          duration: 150,
-          useNativeDriver: true
-        })
-      ]).start();
-
-      if (!isIntroCard) {
-        if (swipeDirection === 'left') {
-          processValueDisplay(currentCard.valeurs_choix1, true);
-          setRightValue(null);
-          setRightText(null);
-        } else {
-          processValueDisplay(currentCard.valeurs_choix2, false);
-          setLeftValue(null);
-          setLeftText(null);
-        }
-      }
-
-      const scaleValue = 1 - Math.abs(gestureState.dx) / (width * 2);
-      cardScale.setValue(scaleValue);
-      
-      const opacityValue = 1 - Math.abs(gestureState.dx) / (width * 1.5);
-      cardOpacity.setValue(opacityValue);
-    },
-    onPanResponderRelease: (event, gestureState) => {
-      const swipeThreshold = width * 0.3;
-
-      if (Math.abs(gestureState.dx) > swipeThreshold) {
-        const swipeDirection = gestureState.dx > 0 ? 'right' : 'left';
-        if (isIntroCard) {
-          handleIntroCardSwipe(swipeDirection);
-        } else {
-          handleCardSwipe(swipeDirection);
-        }
-      } else {
-        Animated.parallel([
-          Animated.spring(pan, {
-            toValue: { x: 0, y: 0 },
-            useNativeDriver: true
-          }),
-          Animated.spring(cardRotation, {
-            toValue: 0,
-            useNativeDriver: true
-          }),
-          Animated.spring(cardScale, {
-            toValue: 1,
-            useNativeDriver: true
-          }),
-          Animated.spring(cardOpacity, {
-            toValue: 1,
-            useNativeDriver: true
-          }),
-          Animated.timing(leftTextOpacity, {
-            toValue: 0,
-            duration: 150,
-            useNativeDriver: true
-          }),
-          Animated.timing(rightTextOpacity, {
-            toValue: 0,
-            duration: 150,
-            useNativeDriver: true
-          })
-        ]).start(() => {
-          setIsCardCentered(true);
-          setLeftValue(null);
-          setRightValue(null);
-          setLeftText(null);
-          setRightText(null);
-        });
-      }
-    }
-  });
-
   const renderValue = (value) => {
     if (!value) return null;
     return value.split(/[,.]/).map((val, index) => {
@@ -288,9 +249,11 @@ export default function CardSwipe({ deckId }) {
     });
   };
 
-  if (cards.length === 0 && !isIntroCard) {
+  if (cards.length === 0) {
     return <Text style={styles.loadingText}>Loading cards...</Text>;
   }
+
+  const currentCard = cards[currentCardIndex];
 
   const cardStyle = {
     transform: [
@@ -308,23 +271,22 @@ export default function CardSwipe({ deckId }) {
 
   return (
     <View style={styles.container}>
-      {!isIntroCard && (
-        <View style={styles.scoreContainer}>
-          <View style={[styles.scoreBox, styles.centeredScore]}>
-            <Text style={styles.scoreLabelText}>Population <Users color="red" size={48}/></Text>
-            <Text style={styles.scoreValueText}>{population}</Text>
-          </View>
-          <View style={[styles.scoreBox, styles.centeredScore]}>
-            <Text style={styles.scoreLabelText}>Finance <Coins color="red" size={48}/></Text>
-            <Text style={styles.scoreValueText}>{argent}</Text>
-          </View>
-          <View style={[styles.scoreBox, styles.centeredScore]}>
-            <Text style={styles.scoreLabelText}>Cartes restantes</Text>
-            <Text style={styles.scoreValueText}>{deckSize}</Text>
-          </View>
+      <View style={styles.scoreContainer}>
+        <View style={[styles.scoreBox, styles.centeredScore]}>
+          <Text style={styles.scoreLabelText}>Population <Users color="red" size={48}/></Text>
+          <Text style={styles.scoreValueText}>{population}</Text>
         </View>
-      )}
+        <View style={[styles.scoreBox, styles.centeredScore]}>
+          <Text style={styles.scoreLabelText}>Finance <Coins color="red" size={48}/></Text>
+          <Text style={styles.scoreValueText}>{argent}</Text>
+        </View>
+        <View style={[styles.scoreBox, styles.centeredScore]}>
+          <Text style={styles.scoreLabelText}>Cartes restantes</Text>
+          <Text style={styles.scoreValueText}>{deckSize}</Text>
+        </View>
+      </View>
 
+      {/* Texte descriptif à gauche */}
       <Animated.View style={[styles.sideText, styles.leftText, { opacity: leftTextOpacity }]}>
         <Text style={styles.sideTextContent}>{leftText}</Text>
       </Animated.View>
@@ -333,16 +295,15 @@ export default function CardSwipe({ deckId }) {
         {...panResponder.panHandlers}
         style={[styles.card, cardStyle]}
       >
-        <Text style={styles.cardText} selectable={false}>
-          {isIntroCard ? "Voulez-vous commencer le jeu ?\n\nGlissez à gauche pour commencer\nGlissez à droite pour retourner au menu" : cards[currentCardIndex].texte_carte}
-        </Text>
+        <Text style={styles.cardText} selectable={false}>{currentCard.texte_carte}</Text>
       </Animated.View>
 
+      {/* Texte descriptif à droite */}
       <Animated.View style={[styles.sideText, styles.rightText, { opacity: rightTextOpacity }]}>
         <Text style={styles.sideTextContent}>{rightText}</Text>
       </Animated.View>
 
-      {!isCardCentered && !isIntroCard && (
+      {!isCardCentered && (
         <View style={styles.valueContainer}>
           {leftValue && renderValue(leftValue)}
           {rightValue && renderValue(rightValue)}
@@ -353,6 +314,7 @@ export default function CardSwipe({ deckId }) {
 }
 
 const styles = StyleSheet.create({
+  // ... styles existants ...
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -382,7 +344,7 @@ const styles = StyleSheet.create({
   },
   scoreLabelText: {
     fontSize: 14,
-    color: '#E94560',
+    color: '#E94560', 
     textTransform: 'uppercase',
     fontWeight: 'bold',
   },
@@ -397,9 +359,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   card: {
-    width: width * 0.3,
-    height: height * 0.6,
-    backgroundColor: '#16213E',
+    width: width * 0.2, 
+    height: height * 0.4,
+    backgroundColor: '#16213E', 
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
