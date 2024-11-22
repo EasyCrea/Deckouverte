@@ -1,5 +1,4 @@
-import { View,  Pressable, Text, StyleSheet } from "react-native";
-import { Getdeck } from "./Fetch/Getdeck";
+import { View } from "react-native";
 import { Login } from "./page/Connexion/login";
 
 
@@ -12,7 +11,6 @@ export default function Index() {
       }}
     >
       <Login/>
-      <Getdeck />
     </View>
   );
 }
