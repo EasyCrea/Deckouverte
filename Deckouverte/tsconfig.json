@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "app/index.js", "app/components/Getdeck.js", "app/_layout.js"  ]
+, "app/index.js", "app/Fetch/Getdeck.js", "app/_layout.js"  ]
 }

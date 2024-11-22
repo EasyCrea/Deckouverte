@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { GetDeckById } from './components/GetDeckById';
+import { GetDeckById } from '../Fetch/GetDeckById';
 
 export default function GameScreen() {
     const { id } = useLocalSearchParams();
