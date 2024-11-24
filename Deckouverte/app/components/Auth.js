@@ -8,7 +8,6 @@ export const getAuthToken = async () => {
 export const loginCreateur = async (email, password) => {
   try {
     const response = await API.post("/createurs/login", { email, password });
-    
     if (response.data && response.data.token) {
       await AsyncStorage.setItem("token", response.data.token);
       return response.data;
@@ -22,7 +21,9 @@ export const loginCreateur = async (email, password) => {
 };
 
 export const registerCreateur = async (data) => {
+  console.log(data);
   const response = await API.post("/createurs/register", data);
+
   return response.data;
 };
 

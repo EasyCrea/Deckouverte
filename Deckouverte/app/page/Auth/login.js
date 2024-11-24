@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginCreateur } from "../../components/Auth";
+import { useRouter } from 'expo-router';
 
 
 export function Login() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -21,10 +24,13 @@ export function Login() {
 
     try {
       const data = await loginCreateur(email, password);
-      asyncStorage.setItem("token", data.token);
+      AsyncStorage.setItem("token", data.token);
+      console.log("Connecté avec succès !");
+      router.push("/page/home");
 
     } catch (err) {
       setError(err.response?.data?.message || "Erreur de connexion.");
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -32,7 +38,6 @@ export function Login() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Connexion</Text>
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Email</Text>
         <TextInput
