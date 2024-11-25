@@ -22,9 +22,16 @@ export const loginCreateur = async (email, password) => {
 
 export const registerCreateur = async (data) => {
   console.log(data);
-  const response = await API.post("/createurs/register", data);
+  try {
+    const response = await API.post("/createurs/register", data);
+    return response.data;
+  } catch(error) {
+    console.error("Erreur lors de l'inscription :", error.message);
+    throw error;
+  }
+  
 
-  return response.data;
+ 
 };
 
 export const logoutCreateur = async () => {

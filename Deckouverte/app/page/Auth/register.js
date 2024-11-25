@@ -9,9 +9,10 @@ import {
   Platform,
   ScrollView,
   Picker,
+  Pressable,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useRouter } from 'expo-router';
+import { useRouter } from "expo-router";
 import { registerCreateur } from "../../components/Auth";
 
 export function Register() {
@@ -24,11 +25,34 @@ export function Register() {
     genre: "homme",
   });
   const [dateNaissance, setDateNaissance] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(Platform.OS === 'ios');
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/createurs");
+      if (!response.ok) {
+        throw new Error("Échec de la récupération des données");
+      }
+
+      const data = await response.json();
+      return data;
+
+    } catch (error) {
+      setError({
+        message: error?.message || "Une erreur est survenue",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   const handleSubmit = async () => {
+    const data = await fetchData();
+
+
     if (!formData.email || !formData.password) {
       setError("Veuillez remplir tous les champs obligatoires.");
       return;
@@ -39,11 +63,18 @@ export function Register() {
       return;
     }
 
+    for (let i = 0; i < data.emails.length; i++) {
+      if (data.emails[i] == formData.email) {
+        setError("Cet email est déjà utilisé.");
+        return;
+      }
+    }
+
     setError("");
     setLoading(true);
 
     try {
-      const formattedDate = dateNaissance.toISOString().split('T')[0];
+      const formattedDate = dateNaissance.toISOString().split("T")[0];
       const data = {
         name: formData.name.trim(),
         email: formData.email.toLowerCase().trim(),
@@ -53,27 +84,98 @@ export function Register() {
       };
 
       await registerCreateur(data);
-      router.push("/");
+      // router.push("/");
     } catch (err) {
       setError(err.response?.data?.message || "Erreur lors de l'inscription.");
       console.error(err);
     } finally {
+
       setLoading(false);
     }
   };
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   const handleDateChange = (event, selectedDate) => {
-    setShowDatePicker(Platform.OS === 'ios');
+    if (Platform.OS === "android") {
+      setShowDatePicker(false);
+    }
+
     if (selectedDate) {
       setDateNaissance(selectedDate);
     }
+  };
+
+  const formatDate = (date) => {
+    return date.toLocaleDateString("fr-FR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
+
+  const handleWebDateChange = (event) => {
+    const selectedDate = new Date(event.target.value);
+    setDateNaissance(selectedDate);
+  };
+
+  const renderDatePicker = () => {
+    // Pour le web
+    if (Platform.OS === "web") {
+      return (
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Date de naissance</Text>
+          <TextInput
+            type="date"
+            style={styles.input}
+            onChange={handleWebDateChange}
+          />
+        </View>
+      );
+    }
+
+    // Pour iOS
+    if (Platform.OS === "ios") {
+      return (
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Date de naissance</Text>
+          <DateTimePicker
+            value={dateNaissance}
+            mode="date"
+            display="spinner"
+            onChange={handleDateChange}
+            style={styles.datePicker}
+          />
+        </View>
+      );
+    }
+
+    // Pour Android
+    return (
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Date de naissance</Text>
+        <TouchableOpacity
+          style={styles.dateButton}
+          onPress={() => setShowDatePicker(true)}
+        >
+          <Text style={styles.dateButtonText}>{formatDate(dateNaissance)}</Text>
+        </TouchableOpacity>
+
+        {showDatePicker && (
+          <DateTimePicker
+            value={dateNaissance}
+            mode="date"
+            display="default"
+            onChange={handleDateChange}
+          />
+        )}
+      </View>
+    );
   };
 
   return (
@@ -85,7 +187,7 @@ export function Register() {
             style={styles.input}
             placeholder="Votre pseudo"
             value={formData.name}
-            onChangeText={(value) => handleInputChange('name', value)}
+            onChangeText={(value) => handleInputChange("name", value)}
           />
         </View>
 
@@ -95,7 +197,7 @@ export function Register() {
             style={styles.input}
             placeholder="Email"
             value={formData.email}
-            onChangeText={(value) => handleInputChange('email', value)}
+            onChangeText={(value) => handleInputChange("email", value)}
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
@@ -108,7 +210,7 @@ export function Register() {
             style={styles.input}
             placeholder="Mot de passe"
             value={formData.password}
-            onChangeText={(value) => handleInputChange('password', value)}
+            onChangeText={(value) => handleInputChange("password", value)}
             secureTextEntry
           />
         </View>
@@ -119,7 +221,9 @@ export function Register() {
             style={styles.input}
             placeholder="Confirmer le mot de passe"
             value={formData.passwordConfirm}
-            onChangeText={(value) => handleInputChange('passwordConfirm', value)}
+            onChangeText={(value) =>
+              handleInputChange("passwordConfirm", value)
+            }
             secureTextEntry
           />
         </View>
@@ -130,7 +234,7 @@ export function Register() {
             <Picker
               selectedValue={formData.genre}
               style={styles.picker}
-              onValueChange={(value) => handleInputChange('genre', value)}
+              onValueChange={(value) => handleInputChange("genre", value)}
             >
               <Picker.Item label="Homme" value="homme" />
               <Picker.Item label="Femme" value="femme" />
@@ -139,18 +243,7 @@ export function Register() {
           </View>
         </View>
 
-        {Platform.OS === 'ios' && (
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Date de naissance</Text>
-            <DateTimePicker
-              value={dateNaissance}
-              mode="date"
-              display="spinner"
-              onChange={handleDateChange}
-              style={styles.datePicker}
-            />
-          </View>
-        )}
+        {renderDatePicker()}
 
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
@@ -166,6 +259,12 @@ export function Register() {
           )}
         </TouchableOpacity>
       </View>
+      <Pressable style={styles.button} onPress={() => router.push("/page/Auth/userconnexion?page=connexion")}>
+        <Text style={styles.buttonText}>Se connecter</Text>
+      </Pressable>
+      <Pressable style={styles.button} onPress={() => router.push("/")}>
+        <Text style={styles.buttonText}>Retour</Text>
+      </Pressable>
     </ScrollView>
   );
 }
@@ -177,59 +276,70 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
   },
   inputGroup: {
     marginBottom: 20,
   },
   label: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 8,
-    color: '#555',
+    color: "#555",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: '#fff',
-    color: '#333',
+    backgroundColor: "#fff",
+    color: "#333",
   },
   pickerContainer: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 8,
-    backgroundColor: '#fff',
-    overflow: 'hidden',
+    backgroundColor: "#fff",
+    overflow: "hidden",
   },
   picker: {
     height: 50,
-    width: '100%',
+    width: "100%",
   },
   datePicker: {
-    width: '100%',
+    width: "100%",
     marginTop: -10,
   },
+  dateButton: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    padding: 12,
+    backgroundColor: "#fff",
+  },
+  dateButtonText: {
+    fontSize: 16,
+    color: "#333",
+  },
   error: {
-    color: '#ff4d4d',
+    color: "#ff4d4d",
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
   },
   button: {
-    backgroundColor: '#007BFF',
+    backgroundColor: "#007BFF",
     paddingVertical: 15,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
   },
   buttonDisabled: {
-    backgroundColor: '#a0a0a0',
+    backgroundColor: "#a0a0a0",
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
