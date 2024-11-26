@@ -88,7 +88,7 @@ export function Getdeck() {
             </Pressable>
             <Pressable
               style={styles.button}
-              onPress={() => router.push(`/details?id=${item.id_deck}`)}
+              onPress={() => router.push(`/page/details?id=${item.id_deck}`)}
             >
               <Text style={styles.button}>Détails</Text>
             </Pressable>

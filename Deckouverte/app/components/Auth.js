@@ -21,7 +21,6 @@ export const loginCreateur = async (email, password) => {
 };
 
 export const registerCreateur = async (data) => {
-  console.log(data);
   try {
     const response = await API.post("/createurs/register", data);
     return response.data;
@@ -30,8 +29,16 @@ export const registerCreateur = async (data) => {
     throw error;
   }
   
+};
 
- 
+export const validateToken = async () => {
+  try {
+    const response = await API.get("/createurs/checkToken");
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la validation du token :", error.message);
+    throw error;
+  }
 };
 
 export const logoutCreateur = async () => {

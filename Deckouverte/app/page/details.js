@@ -1,11 +1,15 @@
-import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { GetDeckById } from '../Fetch/GetDeckById';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { validateToken } from "../components/Auth";
 
 export default function GameScreen() {
-    const { id } = useLocalSearchParams();
+  const { id } = useLocalSearchParams();
   const router = useRouter();
+
+  
+
 
   return (
     <View style={styles.container}>
