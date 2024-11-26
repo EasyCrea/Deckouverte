@@ -140,23 +140,23 @@ const ReignsGame = () => {
 
   return (
     <View style={styles.container}>
-      {!gameStarted ? (
-        <PanGestureHandler 
-          onGestureEvent={handleGestureEvent} 
-          onHandlerStateChange={handleStateChange}
-        >
-          <Animated.View style={[styles.card, animatedStyle]}>
-            <Text style={styles.eventText}>
-              Voulez-vous commencer à jouer?
-            </Text>
-            <Animated.Text style={[styles.choiceLabelLeft, choiceLabelLeftStyle]}>
-              Retour
-            </Animated.Text>
-            <Animated.Text style={[styles.choiceLabelRight, choiceLabelRightStyle]}>
-              Jouer
-            </Animated.Text>
-          </Animated.View>
-        </PanGestureHandler>
+    {!gameStarted ? (
+      <PanGestureHandler 
+        onGestureEvent={handleGestureEvent} 
+        onHandlerStateChange={handleStateChange}
+      >
+        <Animated.View style={[styles.card, animatedStyle]}>
+          <Text style={styles.eventText}>
+            Voulez-vous commencer à jouer?
+          </Text>
+          <Animated.Text style={[styles.choiceLabelLeft, choiceLabelLeftStyle]}>
+            Retour
+          </Animated.Text>
+          <Animated.Text style={[styles.choiceLabelRight, choiceLabelRightStyle]}>
+            Jouer
+          </Animated.Text>
+        </Animated.View>
+      </PanGestureHandler>
       ) : (
         <>
           <View style={styles.scoreContainer}>
@@ -211,9 +211,9 @@ const ReignsGame = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Règne Terminé</Text>
+            <Text style={styles.modalTitle}>Partie Terminé</Text>
             <Text style={styles.modalText}>
-              Votre règne a pris fin après {turn} tours.
+              Votre partie c'est terminé après {turn} tours.
             </Text>
             <TouchableOpacity
               style={styles.modalButton}
