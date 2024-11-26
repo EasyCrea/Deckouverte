@@ -3,12 +3,21 @@ import { Login } from "./login";
 import { Register } from "./register";
 import { useGlobalSearchParams } from "expo-router/build/hooks";
 import { useRouter } from "expo-router";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from "react";
 
 
 export default function Index() {
     const router = useRouter();
+    useEffect(() => {
+        const clear = async () => { 
+          await AsyncStorage.removeItem('token');
+        }
+        clear();
+      }
+      , []);
+      
     const { page } = useGlobalSearchParams();
-    
     if (page === "connexion") {
         return (
             <View style={styles.container}>

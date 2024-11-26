@@ -18,9 +18,9 @@ import { registerCreateur } from "../../components/Auth";
 export function Register() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
+    nom_createur: "",
+    ad_email_createur: "",
+    mdp_createur: "",
     passwordConfirm: "",
     genre: "homme",
   });
@@ -29,45 +29,17 @@ export function Register() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch("http://localhost:8000/createurs");
-      if (!response.ok) {
-        throw new Error("Échec de la récupération des données");
-      }
-
-      const data = await response.json();
-      return data;
-
-    } catch (error) {
-      setError({
-        message: error?.message || "Une erreur est survenue",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
 
   const handleSubmit = async () => {
-    const data = await fetchData();
 
-
-    if (!formData.email || !formData.password) {
+    if (!formData.ad_email_createur || !formData.mdp_createur) {
       setError("Veuillez remplir tous les champs obligatoires.");
       return;
     }
 
-    if (formData.password !== formData.passwordConfirm) {
+    if (formData.mdp_createur !== formData.passwordConfirm) {
       setError("Les mots de passe ne correspondent pas.");
       return;
-    }
-
-    for (let i = 0; i < data.emails.length; i++) {
-      if (data.emails[i] == formData.email) {
-        setError("Cet email est déjà utilisé.");
-        return;
-      }
     }
 
     setError("");
@@ -76,9 +48,9 @@ export function Register() {
     try {
       const formattedDate = dateNaissance.toISOString().split("T")[0];
       const data = {
-        name: formData.name.trim(),
-        email: formData.email.toLowerCase().trim(),
-        password: formData.password,
+        nom_createur: formData.nom_createur.trim(),
+        ad_email_createur: formData.ad_email_createur.toLowerCase().trim(),
+        mdp_createur: formData.mdp_createur,
         genre: formData.genre,
         ddn: formattedDate,
       };
@@ -186,8 +158,8 @@ export function Register() {
           <TextInput
             style={styles.input}
             placeholder="Votre pseudo"
-            value={formData.name}
-            onChangeText={(value) => handleInputChange("name", value)}
+            value={formData.nom_createur}
+            onChangeText={(value) => handleInputChange("nom_createur", value)}
           />
         </View>
 
@@ -196,8 +168,8 @@ export function Register() {
           <TextInput
             style={styles.input}
             placeholder="Email"
-            value={formData.email}
-            onChangeText={(value) => handleInputChange("email", value)}
+            value={formData.ad_email_createur}
+            onChangeText={(value) => handleInputChange("ad_email_createur", value)}
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
@@ -209,8 +181,8 @@ export function Register() {
           <TextInput
             style={styles.input}
             placeholder="Mot de passe"
-            value={formData.password}
-            onChangeText={(value) => handleInputChange("password", value)}
+            value={formData.mdp_createur}
+            onChangeText={(value) => handleInputChange("mdp_createur", value)}
             secureTextEntry
           />
         </View>
