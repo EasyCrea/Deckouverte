@@ -9,19 +9,19 @@ import {
 import { useRouter } from "expo-router";
 import API from "../components/API";
 
-export function Getdeck() {
+export function GetCardInDeck({ deckId }) {
   const router = useRouter();
 
-  const [deck, setDeck] = useState(null);
+  const [cards, setCards] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await API.get("http://localhost:8000/createur");
+        const response = await API.get(`http://localhost:8000/createur/participants/${deckId}`);
         const json = await response.data;
-        setDeck(json);
+        setCards(json);
       } catch (error) {
         setError({
           message: error?.message || "Une erreur est survenue",
@@ -52,46 +52,23 @@ export function Getdeck() {
     );
   }
 
-  if (!deck) {
+  if (!cards) {
     return (
       <View style={styles.container}>
         <Text style={styles.emptyStateText}>Aucune donnée disponible</Text>
       </View>
     );
   }
+  console.log(cards);
 
   return (
     <View style={styles.main}>
-        <Text style={styles.title}>Bienvenue sur Deckouverte</Text>
-        {deck.decks.map((item, index) => (
-          <View key={item.id || index} style={styles.container}>
-            <Pressable
-              style={styles.button}
-              onPress={() => router.push(`/page/jeu?id=${item.id_deck}`)}
-            >
-              <View style={styles.card}>
-                <Text style={styles.texte}>Le titre : {item.titre_deck}</Text>
-                <View style={styles.information}>
-                  <Text style={styles.cardDetails}>
-                    le début : {item.date_debut_deck}
-                  </Text>
-                  <Text style={styles.cardDetails}>
-                    la fin : {item.date_fin_deck}
-                  </Text>
-                  <Text style={styles.cardDetails}>
-                    Nombre de cartes : {item.nb_cartes}
-                  </Text>
-                </View>
-              </View>
-            </Pressable>
-            <Pressable
-              style={styles.button}
-              onPress={() => router.push(`/page/details?id=${item.id_deck}`)}
-            >
-              <Text style={styles.button}>Détails</Text>
-            </Pressable>
-          </View>
-        ))}
+      <Text style={styles.title}>Cartes dans le deck</Text>
+      {cards.createurs.map((card, index) => (
+        <View key={index}>
+          <Text style={styles.cardTitle}>{card.nom_createur}</Text>
+        </View>
+      ))}
     </View>
   );
 }

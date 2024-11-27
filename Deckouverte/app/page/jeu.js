@@ -3,11 +3,13 @@ import { View, Text, Pressable, StyleSheet, Modal } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import CardSwipe from './../Fetch/Getcard';
 import { AntDesign } from '@expo/vector-icons';
+import { Secure } from '../components/Secure';
 
 export default function GameScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const [isRulesVisible, setIsRulesVisible] = useState(false);
+  Secure();
 
   return (
     <View style={styles.container}>

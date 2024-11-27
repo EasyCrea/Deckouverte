@@ -7,6 +7,7 @@ import {
   Pressable,
 } from "react-native";
 import { useRouter } from "expo-router";
+import API from "../components/API";
 
 export function GetDeckById({ deckId }) {
   const router = useRouter();
@@ -18,11 +19,8 @@ export function GetDeckById({ deckId }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/createur/deck/${deckId}`);
-        if (!response.ok) {
-          throw new Error("Échec de la récupération des données");
-        }
-        const json = await response.json();
+        const response = await API.get(`http://localhost:8000/createur/deck/${deckId}`);
+        const json = await response.data;
         setDeck(json);
       } catch (error) {
         setError({
@@ -66,6 +64,8 @@ export function GetDeckById({ deckId }) {
   return (
     <View style={styles.main}>
         <Text style={styles.title}>Nous sommes dans le deck {deck.deck.titre_deck}</Text>
+
+
     </View>
   );
 }

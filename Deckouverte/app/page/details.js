@@ -1,28 +1,27 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { GetDeckById } from '../Fetch/GetDeckById';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { validateToken } from "../components/Auth";
+import { Secure } from '../components/Secure';
+import { GetCardInDeck } from '../Fetch/GetCardInDeck';
 
 export default function GameScreen() {
   const { id } = useLocalSearchParams();
-  const router = useRouter();
+  const router = useRouter(); 
+  Secure();
 
+    return (
+      <View style={styles.container}>
+        <GetDeckById deckId={id} />
+        <GetCardInDeck deckId={id} />
+        <Pressable 
+          style={styles.button}
+          onPress={() => router.back()}
+        >
+          <Text style={styles.buttonText}>Retour à la page des decks</Text>
+        </Pressable>
+      </View>
+    );
   
-
-
-  return (
-    <View style={styles.container}>
-      <GetDeckById deckId={id} />
-      <Pressable 
-        style={styles.button}
-        onPress={() => router.back()}
-      >
-        <Text style={styles.buttonText}>Retour à l'accueil</Text>
-      </Pressable>
-      <Text>Deck id : {id}</Text>
-    </View>
-  );
 }
 
 // Styles communs
