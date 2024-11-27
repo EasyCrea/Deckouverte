@@ -52,7 +52,7 @@ export function GetCardInDeck({ deckId }) {
     );
   }
 
-  if (!cards) {
+  if (!cards.createurs || cards.createurs.length === 0) {
     return (
       <View style={styles.container}>
         <Text style={styles.emptyStateText}>Aucune donnée disponible</Text>
@@ -62,11 +62,11 @@ export function GetCardInDeck({ deckId }) {
   console.log(cards);
 
   return (
-    <View style={styles.main}>
-      <Text style={styles.title}>Cartes dans le deck</Text>
+    <View>
+      <Text>Créateur ayant participer aux decks</Text>
       {cards.createurs.map((card, index) => (
         <View key={index}>
-          <Text style={styles.cardTitle}>{card.nom_createur}</Text>
+          <Text>{card.nom_createur}</Text>
         </View>
       ))}
     </View>
@@ -74,22 +74,5 @@ export function GetCardInDeck({ deckId }) {
 }
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 50,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  container:{
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#c2c2c2',
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 10,
-  },
-  button:{
-    color: 'blue',
-  }
 
 });

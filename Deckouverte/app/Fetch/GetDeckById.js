@@ -62,31 +62,15 @@ export function GetDeckById({ deckId }) {
   console.log(deck);
 
   return (
-    <View style={styles.main}>
-        <Text style={styles.title}>Nous sommes dans le deck {deck.deck.titre_deck}</Text>
-
-
+    <View>
+        <Text >{deck.deck.titre_deck}</Text>
+        <Text>Début :{deck.deck.date_debut_deck}</Text>
+        <Text>Fin : {deck.deck.date_fin_deck}</Text>
+        <Text>Like : {deck.deck.nb_jaime}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 50,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  container:{
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#c2c2c2',
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 10,
-  },
-  button:{
-    color: 'blue',
-  }
 
 });
