@@ -13,6 +13,7 @@ import { Secure } from '../components/Secure';
 import { GetCardInDeck } from '../Fetch/GetCardInDeck';
 import { Heart } from 'lucide-react-native';
 import { AjoutLike } from '../components/Auth';
+import { validateToken } from '../components/Auth';
 
 export default function GameScreen() {
     const { id } = useLocalSearchParams();
@@ -30,7 +31,9 @@ export default function GameScreen() {
         setLoading(true);
         setError(null);
         try {
-            await AjoutLike(id);
+            const serverResponse = await validateToken();
+            const id_createur = serverResponse.decoded.id;
+            await AjoutLike(id, id_createur);
             router.replace(`/page/home`);
         } catch (error) {
             console.error(error);
@@ -40,6 +43,7 @@ export default function GameScreen() {
             setLoading(false);
         }
     };
+    
 
     
 
