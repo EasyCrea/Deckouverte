@@ -7,11 +7,11 @@ import {
   Pressable,
   TextInput,
   FlatList,
-  Dimensions,
   useWindowDimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
 import API from "../components/API";
+import { validateToken } from "../components/Auth";
 
 export function Getdeck() {
   const router = useRouter();
@@ -20,16 +20,18 @@ export function Getdeck() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  
- 
-  const numColumns = Math.max(1, Math.floor(width / 320)); // 320 est la largeur minimale d'une carte
-  
-  // Clé unique pour forcer le re-render du FlatList quand numColumns change
+  const [idCreateur, setIdCreateur] = useState(null);
+
+  // Calculer le nombre de colonnes en fonction de la largeur de l'écran
+  const numColumns = Math.max(1, Math.floor(width / 320));
   const listKey = `list-${numColumns}`;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const serverResponse = await validateToken();
+        const id_createur = serverResponse.decoded.id;
+        setIdCreateur(id_createur); // Stocker l'id_createur dans un état
         const response = await API.get("http://localhost:8000/createur");
         setDeck(response.data);
       } catch (error) {
@@ -52,41 +54,55 @@ export function Getdeck() {
   
 
   // Memoize renderCard pour optimiser les performances
-  const renderCard = useCallback(({ item }) => (
-    <Pressable
-      style={[styles.card, { width: width / numColumns - 20 }]}
-      onPress={() => router.push(`/page/jeu?id=${item.id_deck}`)}
-    >
-      <View style={styles.cardContent}>
-        <View style={styles.cardHeader}>
-          <View style={styles.cardIcon}>
-            <Text style={styles.cardIconText}>
-              {item.titre_deck[0]?.toUpperCase()}
-            </Text>
+  const renderCard = useCallback(
+    ({ item }) => (
+      <Pressable
+        style={[styles.card, { width: width / numColumns - 20 }]}
+        onPress={() => router.push(`/page/jeu?id=${item.id_deck}`)}
+      >
+        <View style={styles.cardContent}>
+          <View style={styles.cardHeader}>
+            <View style={styles.cardIcon}>
+              <Text style={styles.cardIconText}>
+                {item.titre_deck[0]?.toUpperCase()}
+              </Text>
+            </View>
+            <View style={styles.cardBadge}>
+              <Text style={styles.cardCount}>{item.nb_cartes} cartes</Text>
+            </View>
           </View>
-          <View style={styles.cardBadge}>
-            <Text style={styles.cardCount}>{item.nb_cartes} cartes</Text>
+
+          <Text style={styles.cardTitle} numberOfLines={2}>
+            {item.titre_deck}
+          </Text>
+
+          <View style={styles.dateContainer}>
+            <Text style={styles.dateText}>Du {item.date_debut_deck}</Text>
+            <Text style={styles.dateText}>au {item.date_fin_deck}</Text>
           </View>
+
+          <Pressable
+            style={styles.detailsButton}
+            onPress={() =>
+              router.push(`/page/details?id=${item.id_deck}`)
+            }
+          >
+            <Text style={styles.detailsButtonText}>Voir les détails →</Text>
+          </Pressable>
+
+          <Pressable
+            style={styles.detailsButton}
+            onPress={() =>
+              router.push(`/page/historique?user_id=${idCreateur}&deck_id=${item.id_deck}`)
+            }
+          >
+            <Text style={styles.detailsButtonText}>Voir l'historique →</Text>
+          </Pressable>
         </View>
-        
-        <Text style={styles.cardTitle} numberOfLines={2}>
-          {item.titre_deck}
-        </Text>
-        
-        <View style={styles.dateContainer}>
-          <Text style={styles.dateText}>Du {item.date_debut_deck}</Text>
-          <Text style={styles.dateText}>au {item.date_fin_deck}</Text>
-        </View>
-        
-        <Pressable
-          style={styles.detailsButton}
-          onPress={() => router.push(`/page/details?id=${item.id_deck}`)}
-        >
-          <Text style={styles.detailsButtonText}>Voir les détails →</Text>
-        </Pressable>
-      </View>
-    </Pressable>
-  ), [numColumns, width]);
+      </Pressable>
+    ),
+    [numColumns, width, idCreateur] // Inclure idCreateur dans les dépendances
+  );
 
   if (loading) {
     return (
@@ -109,7 +125,7 @@ export function Getdeck() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Deckouverte</Text>
-      
+
       <View style={styles.searchContainer}>
         <Text style={styles.searchIcon}>🔍</Text>
         <TextInput
@@ -136,7 +152,6 @@ export function Getdeck() {
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
