@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -12,7 +12,7 @@ import { GetDeckById } from '../Fetch/GetDeckById';
 import { Secure } from '../components/Secure';
 import { GetCardInDeck } from '../Fetch/GetCardInDeck';
 import { Heart } from 'lucide-react-native';
-import { AjoutLike } from '../components/Auth';
+import { AjoutLike, RecupererLike } from '../components/Auth';
 import { validateToken } from '../components/Auth';
 
 export default function GameScreen() {
@@ -43,6 +43,23 @@ export default function GameScreen() {
             setLoading(false);
         }
     };
+    const clientLike = async () => {
+        try {
+            const serverResponse = await validateToken();
+            const id_createur = serverResponse.decoded.id;
+            const userLike = await RecupererLike(id, id_createur);
+            console.log(userLike);
+
+        } catch (error) {
+            console.error(error);
+        }
+
+    }
+
+    useEffect(() => {
+        clientLike();
+    }, []);
+    
     
 
     
