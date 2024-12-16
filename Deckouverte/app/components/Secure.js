@@ -10,17 +10,7 @@ export function Secure(){
     useEffect(() => {
         const token = async () => { 
             try  {
-                const serverResponse = await validateToken();
-                const serverEmail = serverResponse.decoded.email;
-                
-                const tokenFromStorage = await AsyncStorage.getItem('token');
-                const decodedStorageToken = jwtDecode(tokenFromStorage);
-                const storageEmail = decodedStorageToken.email;
-                
-                // Comparaison des emails
-                if (serverEmail !== storageEmail) {
-                    router.replace('/');
-                } 
+                await validateToken();
             }
             catch (err) {
                 router.replace('/');

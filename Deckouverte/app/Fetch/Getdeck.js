@@ -21,7 +21,7 @@ export function Getdeck() {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Calculer le nombre de colonnes en fonction de la largeur de l'écran
+ 
   const numColumns = Math.max(1, Math.floor(width / 320)); // 320 est la largeur minimale d'une carte
   
   // Clé unique pour forcer le re-render du FlatList quand numColumns change
@@ -43,9 +43,13 @@ export function Getdeck() {
     fetchData();
   }, []);
 
-  const filteredDecks = deck?.decks.filter(item =>
-    item.titre_deck.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredDecks = Array.isArray(deck?.decks) 
+    ? deck.decks.filter(item =>
+        item.titre_deck.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
+
+  
 
   // Memoize renderCard pour optimiser les performances
   const renderCard = useCallback(({ item }) => (
@@ -116,7 +120,6 @@ export function Getdeck() {
           placeholderTextColor="#9CA3AF"
         />
       </View>
-
       <FlatList
         key={listKey}
         data={filteredDecks}

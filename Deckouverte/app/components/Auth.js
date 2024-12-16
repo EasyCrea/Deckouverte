@@ -33,9 +33,12 @@ export const registerCreateur = async (data) => {
 
 export const AjoutLike = async (id_deck, id_createur) => {
   try {
-    //const response = await API.patch(`/likeDeck/${id_deck}`);
     const response2 = await API.post(`/like/${id_deck}/${id_createur}`);
-    console.log(response2.data);
+    console.log(response2.data.status);
+    if (!response2.data.status === "error"){
+      const response = await API.patch(`/likeDeck/${id_deck}`);
+    }
+    
     return response2.data;
   } catch (error) {
     console.error("Erreur lors de l'ajout du like :", error.message);

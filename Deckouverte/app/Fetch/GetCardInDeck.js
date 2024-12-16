@@ -55,7 +55,7 @@ export function GetCardInDeck({ deckId }) {
   if (!cards.createurs || cards.createurs.length === 0) {
     return (
       <View style={styles.container}>
-        <Text style={styles.emptyStateText}>Aucune donnée disponible</Text>
+        <Text style={styles.emptyStateText}>Aucune carte actuellement dans le deck</Text>
       </View>
     );
   }
