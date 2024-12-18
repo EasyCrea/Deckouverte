@@ -16,12 +16,13 @@ import Animated, {
   Extrapolate,
   withTiming,
 } from "react-native-reanimated";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 const { width } = Dimensions.get("window");
 
 const ReignsGame = () => {
   const router = useRouter();
+  const { id } = useLocalSearchParams();
   const [gameStarted, setGameStarted] = useState(false);
   const [turn, setTurn] = useState(1);
   const [gameStates, setGameStates] = useState({ people: 10, treasury: 10 });
@@ -37,9 +38,7 @@ const ReignsGame = () => {
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:8000/createur/deckCard/35"
-        );
+        const response = await fetch(`http://localhost:8000/createur/deckCard/${id}`);
         const data = await response.json();
         if (data.status === "success" && Array.isArray(data.cards)) {
           setCards(data.cards);
@@ -52,10 +51,10 @@ const ReignsGame = () => {
       }
     };
 
-    if (gameStarted) {
+    if (gameStarted && id) {
       fetchCards();
     }
-  }, [gameStarted]);
+  }, [gameStarted, id]);
 
   const handleGestureEvent = ({ nativeEvent }) => {
     translateX.value = nativeEvent.translationX;
@@ -172,6 +171,7 @@ const ReignsGame = () => {
 
   return (
     <View style={styles.container}>
+      
       {!gameStarted ? (
         <PanGestureHandler
           onGestureEvent={handleGestureEvent}
