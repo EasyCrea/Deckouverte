@@ -55,6 +55,16 @@ export const RecupererLike = async (id_deck, id_createur) => {
   }
 };
 
+export const DeleteLike = async (id_deck, id_createur) => {
+  try{
+    const response = await API.delete(`/like/delete/${id_deck}/${id_createur}`);
+    return response.data;
+  } catch(error) {
+    console.error("Erreur lors de la suppression du like :", error.message);
+    throw error;
+  }
+}
+
 export const validateToken = async () => {
   try {
     const response = await API.get("/authorization/checkToken");

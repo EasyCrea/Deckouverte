@@ -45,11 +45,9 @@ export function Getdeck() {
     fetchData();
   }, []);
 
-  const filteredDecks = Array.isArray(deck?.decks) 
-    ? deck.decks.filter(item =>
-        item.titre_deck.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : [];
+  const filteredDecks = Array.isArray(deck?.decks) ? deck.decks.filter(item => item.live === 0) : [];
+  console.log(filteredDecks);
+    
 
   
 

@@ -12,7 +12,7 @@ import { GetDeckById } from '../Fetch/GetDeckById';
 import { Secure } from '../components/Secure';
 import { GetCardInDeck } from '../Fetch/GetCardInDeck';
 import { Heart } from 'lucide-react-native';
-import { AjoutLike, RecupererLike } from '../components/Auth';
+import { AjoutLike, RecupererLike, DeleteLike } from '../components/Auth';
 import { validateToken } from '../components/Auth';
 
 export default function GameScreen() {
@@ -33,8 +33,17 @@ export default function GameScreen() {
         try {
             const serverResponse = await validateToken();
             const id_createur = serverResponse.decoded.id;
-            await AjoutLike(id, id_createur);
-            router.replace(`/page/home`);
+            console.log(liked);
+
+            if (liked) {
+                await AjoutLike(id, id_createur);
+                router.replace('/page/home');
+            }
+            else {
+                await DeleteLike(id, id_createur);
+                 router.replace('/page/home');  
+            }
+            
         } catch (error) {
             console.error(error);
             setError('Failed to add like');
@@ -49,11 +58,13 @@ export default function GameScreen() {
             const id_createur = serverResponse.decoded.id;
             const userLike = await RecupererLike(id, id_createur);
             console.log(userLike);
+            if (userLike.status === "success") {
+                setLiked(true);
+            }
 
         } catch (error) {
             console.error(error);
         }
-
     }
 
     useEffect(() => {
@@ -86,20 +97,13 @@ export default function GameScreen() {
                     size={48}
                 />
             </TouchableOpacity>
-
-            {liked && (
                 <TouchableOpacity
                     style={styles.confirmButton}
                     onPress={confirmLike}
-                    disabled={loading}
                 >
-                    {loading ? (
-                        <ActivityIndicator color="white" />
-                    ) : (
-                        <Text style={styles.confirmButtonText}>Confirmer le like</Text>
-                    )}
+            
+                <Text style={styles.confirmButtonText}>Valider</Text>
                 </TouchableOpacity>
-            )}
 
             {error && <Text style={styles.errorText}>{error}</Text>}
         </View>
