@@ -34,9 +34,6 @@ export const registerCreateur = async (data) => {
 export const AjoutLike = async (id_deck, id_createur) => {
   try {
     const response2 = await API.post(`/like/${id_deck}/${id_createur}`);
-    if (!response2.data.status === "error"){
-      const response = await API.patch(`/likeDeck/${id_deck}`);
-    }
     
     return response2.data;
   } catch (error) {

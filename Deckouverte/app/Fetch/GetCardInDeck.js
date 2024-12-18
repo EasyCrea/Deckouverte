@@ -59,7 +59,6 @@ export function GetCardInDeck({ deckId }) {
       </View>
     );
   }
-  console.log(cards);
 
   return (
     <View>

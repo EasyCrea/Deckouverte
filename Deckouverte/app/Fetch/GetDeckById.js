@@ -59,7 +59,7 @@ export function GetDeckById({ deckId }) {
       </View>
     );
   }
-  console.log(deck);
+
 
   return (
     <View>

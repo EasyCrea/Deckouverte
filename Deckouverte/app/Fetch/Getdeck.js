@@ -46,7 +46,6 @@ export function Getdeck() {
   }, []);
 
   const filteredDecks = Array.isArray(deck?.decks) ? deck.decks.filter(item => item.live === 0) : [];
-  console.log(filteredDecks);
     
 
   
