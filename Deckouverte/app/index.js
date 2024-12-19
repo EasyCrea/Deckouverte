@@ -3,7 +3,6 @@ import { useRouter } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from "react";
 import { StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 
 
 export default function Index() {
@@ -40,9 +39,9 @@ export default function Index() {
             params: { page: "register" },
           })
         }
-        style={styles.button}
+        style={styles.button2}
       >
-        <Text style={styles.buttonText}>Inscription</Text>
+        <Text style={styles.buttonText2}>Inscription</Text>
       </Pressable>
     </View>
   );
@@ -53,7 +52,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#e0e7ff', // indigo-100
+    backgroundColor: '#F4F3FE', // indigo-100
   },
   gradientWrapper: {
     marginBottom: 20,
@@ -70,35 +69,47 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 22,
     fontStyle: 'italic',
-    color: '#7e22ce', // purple-700
     marginBottom: 20,
     textAlign: 'center',
     letterSpacing: 0.8,
   },
   description: {
     fontSize: 18,
-    color: '#4338ca', // indigo-700
     marginBottom: 36,
     textAlign: 'center',
     lineHeight: 26,
     paddingHorizontal: 10,
   },
   button: {
-    backgroundColor: '#4f46e5', // indigo-600
+    backgroundColor: '#5B3ADD', // indigo-600
     paddingVertical: 16,
     paddingHorizontal: 36,
     borderRadius: 16,
     marginBottom: 20,
     width: '100%',
     maxWidth: 320,
-    elevation: 8,
+  },
+  button2: {
+    backgroundColor: '#F5F3FE', // indigo-600
+    paddingVertical: 16,
+    paddingHorizontal: 36,
+    borderRadius: 16,
+    marginBottom: 20,
+    width: '100%',
+    maxWidth: 320,
+    borderWidth: 2,
+    borderColor: "#5B3ADD",
   },
   buttonText: {
     color: '#ffffff',
     fontSize: 20,
-    fontWeight: '800',
     textAlign: 'center',
-    textTransform: 'uppercase',
+    letterSpacing: 1.5,
+  },
+  buttonText2: {
+    color:"#5B3ADD",
+    fontSize: 20,
+    textAlign: 'center',
     letterSpacing: 1.5,
   },
 });
