@@ -3,17 +3,17 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
   Platform,
   ScrollView,
   Pressable,
+  SafeAreaView,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
 import { registerCreateur } from "../../components/Auth";
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from "@react-native-picker/picker";
 
 export function Register() {
   const router = useRouter();
@@ -29,9 +29,7 @@ export function Register() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-
   const handleSubmit = async () => {
-
     if (!formData.ad_email_createur || !formData.mdp_createur) {
       setError("Veuillez remplir tous les champs obligatoires.");
       return;
@@ -56,12 +54,11 @@ export function Register() {
       };
 
       await registerCreateur(data);
-      // router.push("/");
+      router.push("/page/Auth/userconnexion?page=connexion");
     } catch (err) {
       setError(err.response?.data?.message || "Erreur lors de l'inscription.");
       console.error(err);
     } finally {
-
       setLoading(false);
     }
   };
@@ -77,7 +74,6 @@ export function Register() {
     if (Platform.OS === "android") {
       setShowDatePicker(false);
     }
-
     if (selectedDate) {
       setDateNaissance(selectedDate);
     }
@@ -91,13 +87,7 @@ export function Register() {
     });
   };
 
-  const handleWebDateChange = (event) => {
-    const selectedDate = new Date(event.target.value);
-    setDateNaissance(selectedDate);
-  };
-
   const renderDatePicker = () => {
-    // Pour le web
     if (Platform.OS === "web") {
       return (
         <View style={styles.inputGroup}>
@@ -105,13 +95,12 @@ export function Register() {
           <TextInput
             type="date"
             style={styles.input}
-            onChange={handleWebDateChange}
+            onChange={(e) => setDateNaissance(new Date(e.target.value))}
           />
         </View>
       );
     }
 
-    // Pour iOS
     if (Platform.OS === "ios") {
       return (
         <View style={styles.inputGroup}>
@@ -127,16 +116,12 @@ export function Register() {
       );
     }
 
-    // Pour Android
     return (
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Date de naissance</Text>
-        <TouchableOpacity
-          style={styles.dateButton}
-          onPress={() => setShowDatePicker(true)}
-        >
-          <Text style={styles.dateButtonText}>{formatDate(dateNaissance)}</Text>
-        </TouchableOpacity>
+        <Pressable style={styles.input} onPress={() => setShowDatePicker(true)}>
+          <Text style={styles.inputText}>{formatDate(dateNaissance)}</Text>
+        </Pressable>
 
         {showDatePicker && (
           <DateTimePicker
@@ -151,128 +136,191 @@ export function Register() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.container}>
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Votre pseudo</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Votre pseudo"
-            value={formData.nom_createur}
-            onChangeText={(value) => handleInputChange("nom_createur", value)}
-          />
-        </View>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.container}>
+          <View style={styles.headerSection}>
+            <Text style={styles.title}>Inscription</Text>
+          </View>
 
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={formData.ad_email_createur}
-            onChangeText={(value) => handleInputChange("ad_email_createur", value)}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-        </View>
+          <View style={styles.formSection}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Votre pseudo</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Votre pseudo"
+                placeholderTextColor="#666666"
+                value={formData.nom_createur}
+                onChangeText={(value) =>
+                  handleInputChange("nom_createur", value)
+                }
+              />
+            </View>
 
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Mot de passe</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Mot de passe"
-            value={formData.mdp_createur}
-            onChangeText={(value) => handleInputChange("mdp_createur", value)}
-            secureTextEntry
-          />
-        </View>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Email</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Votre email"
+                placeholderTextColor="#666666"
+                value={formData.ad_email_createur}
+                onChangeText={(value) =>
+                  handleInputChange("ad_email_createur", value)
+                }
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
 
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Confirmer le mot de passe</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Confirmer le mot de passe"
-            value={formData.passwordConfirm}
-            onChangeText={(value) =>
-              handleInputChange("passwordConfirm", value)
-            }
-            secureTextEntry
-          />
-        </View>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Mot de passe</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Votre mot de passe"
+                placeholderTextColor="#666666"
+                value={formData.mdp_createur}
+                onChangeText={(value) =>
+                  handleInputChange("mdp_createur", value)
+                }
+                secureTextEntry
+              />
+            </View>
 
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Genre</Text>
-          <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={formData.genre}
-              style={styles.picker}
-              onValueChange={(value) => handleInputChange("genre", value)}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Confirmer le mot de passe</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Confirmez votre mot de passe"
+                placeholderTextColor="#666666"
+                value={formData.passwordConfirm}
+                onChangeText={(value) =>
+                  handleInputChange("passwordConfirm", value)
+                }
+                secureTextEntry
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Genre</Text>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={formData.genre}
+                  style={styles.picker}
+                  onValueChange={(value) => handleInputChange("genre", value)}
+                >
+                  <Picker.Item label="Homme" value="homme" />
+                  <Picker.Item label="Femme" value="femme" />
+                  <Picker.Item label="Autre" value="autre" />
+                </Picker>
+              </View>
+            </View>
+
+            {renderDatePicker()}
+
+            {error ? <Text style={styles.error}>{error}</Text> : null}
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.mainButton,
+                loading && styles.buttonDisabled,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={handleSubmit}
+              disabled={loading}
             >
-              <Picker.Item label="Homme" value="homme" />
-              <Picker.Item label="Femme" value="femme" />
-              <Picker.Item label="Autre" value="autre" />
-            </Picker>
+              {loading ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <Text style={styles.mainButtonText}>S'inscrire</Text>
+              )}
+            </Pressable>
+
+            <Pressable
+              style={styles.button}
+              onPress={() =>
+                router.push("/page/Auth/userconnexion?page=connexion")
+              }
+            >
+              <Text style={{ color: "blue",  fontStyle: 'italic' }}>Se connecter</Text>
+            </Pressable>
+
+            <Pressable
+            style={styles.button}
+             onPress={() => router.push("/")}>
+              <Text style={{ color: "blue",  fontStyle: 'italic' }}>Retour</Text>
+            </Pressable>
           </View>
         </View>
-
-        {renderDatePicker()}
-
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-
-        <TouchableOpacity
-          style={[styles.button, loading && styles.buttonDisabled]}
-          onPress={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>S'inscrire</Text>
-          )}
-        </TouchableOpacity>
-      </View>
-      <Pressable style={styles.button} onPress={() => router.push("/page/Auth/userconnexion?page=connexion")}>
-        <Text style={styles.buttonText}>Se connecter</Text>
-      </Pressable>
-      <Pressable style={styles.button} onPress={() => router.push("/")}>
-        <Text style={styles.buttonText}>Retour</Text>
-      </Pressable>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#F4F3FE",
+  },
   scrollContainer: {
     flexGrow: 1,
   },
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#f5f5f5",
+    paddingHorizontal: 20,
+  },
+  headerSection: {
+    alignItems: "center",
+    paddingTop: 40,
+    marginBottom: 30,
+  },
+  formSection: {
+    width: "100%",
+    paddingHorizontal: 10,
+    paddingBottom: 40,
+  },
+  title: {
+    fontSize: 48,
+    fontWeight: "700",
+    textAlign: "center",
+    color: "#7C2EE0",
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    textAlign: "center",
+    letterSpacing: 0.5,
+    color: "#666666",
   },
   inputGroup: {
     marginBottom: 20,
   },
   label: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "600",
     marginBottom: 8,
-    color: "#555",
+    color: "#333333",
+    paddingLeft: 4,
   },
   input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    padding: 12,
+    backgroundColor: "#FFFFFF",
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderRadius: 16,
     fontSize: 16,
-    backgroundColor: "#fff",
-    color: "#333",
+    color: "#333333",
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+  },
+  inputText: {
+    fontSize: 16,
+    color: "#333333",
   },
   pickerContainer: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    backgroundColor: "#fff",
+    borderColor: "#E0E0E0",
     overflow: "hidden",
   },
   picker: {
@@ -281,37 +329,37 @@ const styles = StyleSheet.create({
   },
   datePicker: {
     width: "100%",
-    marginTop: -10,
-  },
-  dateButton: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    padding: 12,
-    backgroundColor: "#fff",
-  },
-  dateButtonText: {
-    fontSize: 16,
-    color: "#333",
+    backgroundColor: "#FFFFFF",
   },
   error: {
-    color: "#ff4d4d",
-    marginBottom: 15,
+    color: "#FF4D4D",
+    fontSize: 14,
     textAlign: "center",
+    marginBottom: 20,
   },
-  button: {
-    backgroundColor: "#007BFF",
-    paddingVertical: 15,
-    borderRadius: 8,
+  mainButton: {
+    backgroundColor: "#5B3ADD",
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 16,
     alignItems: "center",
     marginTop: 10,
   },
+  mainButtonText: {
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontWeight: "600",
+    letterSpacing: 0.5,
+  },
+  buttonPressed: {
+    opacity: 0.8,
+  },
   buttonDisabled: {
-    backgroundColor: "#a0a0a0",
+    backgroundColor: "#A8A8A8",
   },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
+  button:{
+    marginTop: 10,
+    alignItems: 'center',
+  }
+
 });
