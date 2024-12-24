@@ -61,17 +61,41 @@ export function GetCardInDeck({ deckId }) {
   }
 
   return (
-    <View>
-      <Text>Créateur ayant participer aux decks</Text>
+    <View style={styles.container}>
+      <Text style={styles.titre}>Créateur ayant participer aux decks :</Text>
+      <View style={styles.cards}>
       {cards.createurs.map((card, index) => (
-        <View key={index}>
-          <Text>{card.nom_createur}</Text>
+        <View key={index} style={styles.card}>
+          <Text style={styles.cardText}>{card.nom_createur}</Text>
         </View>
       ))}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  titre: {
+    fontSize: 20,
+    marginVertical: 10,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  cards: {
+    flexDirection: "row",
+    justifyContent: "center",
+    flexWrap: "wrap",
+  },
+  card: {
+    borderColor: "#5B3ADD",
+    borderWidth: 2,
+    padding: 20,
+    margin: 5,
+    borderRadius: 5,
+  },
+  cardText: {
+    color: "#5B3ADD",
+    fontWeight: "bold",
 
+  },
 });

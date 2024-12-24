@@ -5,7 +5,6 @@ import { useRouter } from 'expo-router';
 import { Secure } from '../components/Secure';
 
 export default function home(){
-    const router = useRouter();
     Secure();
 
    

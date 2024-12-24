@@ -14,6 +14,7 @@ import { GetCardInDeck } from "../Fetch/GetCardInDeck";
 import { Heart } from "lucide-react-native";
 import { AjoutLike, RecupererLike, DeleteLike } from "../components/Auth";
 import { validateToken } from "../components/Auth";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function GameScreen() {
   const { id } = useLocalSearchParams();
@@ -23,27 +24,21 @@ export default function GameScreen() {
   const [error, setError] = useState(null);
   Secure();
 
-  const toggleLikeColor = () => {
-    setLiked(!liked); // Permet de basculer entre like et unlike
-  };
-
   const confirmLike = async () => {
+
     setLoading(true);
     setError(null);
     try {
       const serverResponse = await validateToken();
       const id_createur = serverResponse.decoded.id;
 
-      if (liked) {
-        const response = await AjoutLike(id, id_createur);
-        if (response.status === "error") {
-          setError("Like déja ajouté");
-        } else {
-          router.replace("/page/home");
-        }
+      if (!liked) {
+        setLiked(true);
+        await AjoutLike(id, id_createur);
+
       } else {
+        setLiked(false);
         await DeleteLike(id, id_createur);
-        router.replace("/page/home");
       }
     } catch (error) {
       console.error(error);
@@ -71,33 +66,46 @@ export default function GameScreen() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <GetDeckById deckId={id} />
-      <GetCardInDeck deckId={id} />
-
-      <Pressable style={styles.button} onPress={() => router.back()}>
-        <Text>Retour à la page des decks</Text>
-      </Pressable>
-
-      <TouchableOpacity onPress={toggleLikeColor} style={styles.likeContainer}>
+      <TouchableOpacity onPress={confirmLike} style={styles.likeContainer}>
         <Heart
-          color={liked ? "red" : "gray"}
+          color={liked ? "red" : "#5B3ADD"}
           fill={liked ? "red" : "none"}
-          size={48}
+          size={30}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.confirmButton} onPress={confirmLike}>
-        <Text style={styles.confirmButtonText}>Valider</Text>
-      </TouchableOpacity>
-
+      <GetCardInDeck deckId={id} />
+      <Pressable style={styles.button} onPress={() => router.back()}>
+        <Text style={styles.buttonText}>Retour à la page des decks</Text>
+      </Pressable>
       {error && <Text style={styles.errorText}>{error}</Text>}
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,  // Important pour que le container prenne toute la hauteur
-    padding: 20,
+    flex: 1,
+    backgroudnColor: "#f8f7ff",
+    alignItems: "center",
+  },
+  button: {
+    backgroundColor: '#5B3ADD',
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 16,
+    marginBottom: 16,
+    marginTop: 20,
+    width: '80%',
+    maxWidth: 300,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  likeContainer: {
+    marginTop: 20,
   },
 });
