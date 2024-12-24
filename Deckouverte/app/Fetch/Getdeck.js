@@ -45,10 +45,9 @@ export function Getdeck() {
     fetchData();
   }, []);
 
-  const filteredDecks = Array.isArray(deck?.decks) ? deck.decks.filter(item => item.live === 0) : [];
-    
-
-  
+  const filteredDecks = Array.isArray(deck?.decks)
+    ? deck.decks.filter((item) => item.live === 0)
+    : [];
 
   // Memoize renderCard pour optimiser les performances
   const renderCard = useCallback(
@@ -74,26 +73,40 @@ export function Getdeck() {
           </Text>
 
           <View style={styles.dateContainer}>
-            <Text style={styles.dateText}>Du {item.date_debut_deck}</Text>
-            <Text style={styles.dateText}>au {item.date_fin_deck}</Text>
+            <Text style={styles.dateText}>
+              Ouvert Du{" "}
+              {new Date(item.date_debut_deck).toLocaleDateString("fr-FR", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })}
+            </Text>
+            <Text style={styles.dateText}>
+              Au{" "}
+              {new Date(item.date_fin_deck).toLocaleDateString("fr-FR", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })}
+            </Text>
           </View>
 
           <Pressable
             style={styles.detailsButton}
-            onPress={() =>
-              router.push(`/page/details?id=${item.id_deck}`)
-            }
+            onPress={() => router.push(`/page/details?id=${item.id_deck}`)}
           >
             <Text style={styles.detailsButtonText}>Voir les détails →</Text>
           </Pressable>
 
           <Pressable
-            style={styles.detailsButton}
+            style={styles.detailsButton2}
             onPress={() =>
-              router.push(`/page/historique?user_id=${idCreateur}&deck_id=${item.id_deck}`)
+              router.push(
+                `/page/historique?user_id=${idCreateur}&deck_id=${item.id_deck}`
+              )
             }
           >
-            <Text style={styles.detailsButtonText}>Voir l'historique →</Text>
+            <Text style={styles.detailsButtonText2}>Voir l'historique →</Text>
           </Pressable>
         </View>
       </Pressable>
@@ -153,30 +166,30 @@ export function Getdeck() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: "#f8f7ff",
     padding: 12,
   },
   row: {
     flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: "space-around",
     marginBottom: 12,
   },
   title: {
     fontSize: 40,
-    fontWeight: '800',
-    color: '#9333ea',
-    textAlign: 'center',
+    fontWeight: "800",
+    color: "#9333ea",
+    textAlign: "center",
     marginVertical: 16,
   },
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     paddingHorizontal: 12,
     marginBottom: 16,
     height: 44,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
@@ -189,17 +202,17 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: '#1F2937',
-    height: '100%',
+    color: "#1F2937",
+    height: "100%",
   },
   listContainer: {
     paddingVertical: 8,
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 16,
     marginBottom: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
@@ -207,41 +220,42 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     padding: 16,
+    gap: 8,
   },
   cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 12,
   },
   cardIcon: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#312E81',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#5B3ADD",
+    justifyContent: "center",
+    alignItems: "center",
   },
   cardIconText: {
     fontSize: 22,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
   cardBadge: {
-    backgroundColor: '#6366f1',
+    backgroundColor: "#5B3ADD",
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 12,
   },
   cardCount: {
     fontSize: 14,
-    color: '#FFFFFF',
-    fontWeight: '500',
+    color: "#FFFFFF",
+    fontWeight: "500",
   },
   cardTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontWeight: "600",
+    color: "#1F2937",
     marginBottom: 8,
     lineHeight: 24,
   },
@@ -250,39 +264,52 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
     marginBottom: 2,
+    fontStyle: "italic",
   },
   detailsButton: {
-    backgroundColor: '#312E81',
+    backgroundColor: "#5B3ADD",
     borderRadius: 8,
     paddingVertical: 10,
-    alignItems: 'center',
+    alignItems: "center",
+  },
+  detailsButton2: {
+    borderRadius: 8,
+    paddingVertical: 8,
+    alignItems: "center",
+    borderColor: "#5B3ADD",
+    borderWidth: 2,
   },
   detailsButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
+  },
+  detailsButtonText2: {
+    color: "#5B3ADD",
+    fontSize: 16,
+    fontWeight: "500",
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   errorContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   errorText: {
-    color: '#DC2626',
+    color: "#DC2626",
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   emptyText: {
-    textAlign: 'center',
-    color: '#6B7280',
+    textAlign: "center",
+    color: "#6B7280",
     fontSize: 16,
     marginTop: 32,
   },

@@ -123,7 +123,7 @@ export function Login() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#F4F3FE",
+    backgroundColor: '#f8f7ff',
   },
   container: {
     flex: 1,
