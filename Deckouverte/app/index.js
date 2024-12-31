@@ -51,6 +51,20 @@ export default function Index() {
           >
             <Text style={styles.buttonText2}>Inscription</Text>
           </Pressable>
+          <Pressable
+            onPress={() =>
+              router.push({
+                pathname: "/page/home",
+                params: { user: "user" },
+              })
+            }
+            style={({ pressed }) => [
+              styles.button,
+              pressed && styles.buttonPressed
+            ]}
+          >
+            <Text style={styles.buttonText2}>Joué sans connexion</Text>
+          </Pressable>
         </View>
 
         <View style={styles.footerSection}>

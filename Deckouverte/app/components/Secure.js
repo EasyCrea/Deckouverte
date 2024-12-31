@@ -19,4 +19,5 @@ export function Secure(){
         }
         token();
     }, []);
+    return null; 
 }
