@@ -5,7 +5,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { GameHistory } from '../Fetch/GameHistory'; 
 
 export default function HistoriqueScreen() {
-    const { user_id, deck_id } = useLocalSearchParams();  // Récupérer les paramètres de l'URL (user_id et deck_id)
+    const { user_id, deck_id } = useLocalSearchParams(); 
   
     console.log("user_id", user_id);
     console.log("deck_id", deck_id);
@@ -14,7 +14,7 @@ export default function HistoriqueScreen() {
       <View style={styles.container}>
         <Text style={styles.title}>Historique des Jeux</Text>
         {user_id && deck_id ? (
-          <GameHistory userId={user_id} deckId={deck_id} />  // Passer les IDs à GameHistory pour afficher l'historique
+          <GameHistory userId={user_id} deckId={deck_id} /> 
         ) : (
           <Text style={styles.errorText}>L'ID du créateur ou du deck est manquant.</Text>
         )}

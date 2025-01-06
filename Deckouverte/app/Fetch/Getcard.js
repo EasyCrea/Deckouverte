@@ -6,19 +6,21 @@ import {
   Dimensions,
   TouchableOpacity,
   Modal,
+  ImageBackground,
 } from "react-native";
 import { PanGestureHandler, State } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
   interpolate,
   Extrapolate,
-  withTiming,
+  runOnJS,
 } from "react-native-reanimated";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 const ReignsGame = () => {
   const router = useRouter();
@@ -31,14 +33,19 @@ const ReignsGame = () => {
   const [isVictory, setIsVictory] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [remainingCards, setRemainingCards] = useState(0);
-
   const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
   const rotateValue = useSharedValue(0);
+  const rotateY = useSharedValue(0);
+  const scale = useSharedValue(1);
+  const cardOpacity = useSharedValue(1);
 
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/createur/deckCard/${id}`);
+        const response = await fetch(
+          `http://localhost:8000/createur/deckCard/${id}`
+        );
         const data = await response.json();
         if (data.status === "success" && Array.isArray(data.cards)) {
           setCards(data.cards);
@@ -65,6 +72,59 @@ const ReignsGame = () => {
       Extrapolate.CLAMP
     );
   };
+  const resetCardPosition = () => {
+    // Animation plus douce avec des paramètres spring ajustés
+    translateX.value = withSpring(0, {
+      damping: 15,
+      stiffness: 60,
+      mass: 0.5,
+    });
+    translateY.value = withSpring(0, {
+      damping: 10, // Réduit l'amortissement pour une animation plus rapide
+      stiffness: 100, // Augmente la rigidité pour accélérer le retour
+      mass: 0.3,
+    });
+    rotateValue.value = withSpring(0, {
+      damping: 15,
+      stiffness: 60,
+      mass: 0.5,
+    });
+    scale.value = withSpring(1, {
+      damping: 15,
+      stiffness: 60,
+      mass: 0.5,
+    });
+    cardOpacity.value = withTiming(1, { duration: 400 });
+
+    // Animation de retournement de la nouvelle carte
+    setTimeout(() => {
+      rotateY.value = withTiming(0, {
+        duration: 800,
+      });
+    }, 200);
+  };
+
+  const animateCardDismissal = () => {
+    // Ignorer la direction et animer vers le bas
+    translateX.value = withSpring(0, {
+      damping: 15,
+      stiffness: 60,
+      mass: 1,
+    });
+    translateY.value = withSpring(height * 1.2, {
+      // Tomber en bas de l'écran
+      damping: 15,
+      stiffness: 60,
+      mass: 1,
+    });
+    rotateValue.value = withSpring(0, {
+      // Pas de rotation
+      damping: 15,
+      stiffness: 60,
+      mass: 1,
+    });
+    cardOpacity.value = withTiming(0, { duration: 400 });
+  };
 
   const handleStateChange = ({ nativeEvent }) => {
     if (nativeEvent.state === State.END) {
@@ -75,79 +135,100 @@ const ReignsGame = () => {
           ? "right"
           : null;
 
+      // Logique pour démarrer ou quitter le jeu
       if (!gameStarted) {
         if (choice === "right") {
           setGameStarted(true);
-          translateX.value = withTiming(0, { duration: 300 });
-          rotateValue.value = withTiming(0, { duration: 300 });
+          resetCardPosition();
         } else if (choice === "left") {
           router.push("/page/home");
         }
         return;
       }
 
+      // Si une direction valide est sélectionnée
       if (choice && cards[currentCardIndex]) {
-        const impact =
-          choice === "left"
-            ? {
-                label: cards[currentCardIndex].choice_2,
-                people: cards[currentCardIndex].population_impact_2,
-                treasury: cards[currentCardIndex].finance_impact_2,
-              }
-            : {
-                label: cards[currentCardIndex].choice_1,
-                people: cards[currentCardIndex].population_impact_1,
-                treasury: cards[currentCardIndex].finance_impact_1,
-              };
+        // Animer le rejet de la carte
+        animateCardDismissal(choice);
 
-        const newGameStates = { ...gameStates };
-        newGameStates.people += impact.people;
-        newGameStates.treasury += impact.treasury;
+        // Gérer la logique de jeu après l'animation
+        setTimeout(() => {
+          const card = cards[currentCardIndex];
+          const impact =
+            choice === "left"
+              ? {
+                  label: card.choice_2,
+                  people: card.population_impact_2,
+                  treasury: card.finance_impact_2,
+                }
+              : {
+                  label: card.choice_1,
+                  people: card.population_impact_1,
+                  treasury: card.finance_impact_1,
+                };
 
-        setGameStates(newGameStates);
-        setTurn((prev) => prev + 1);
-        setRemainingCards((prev) => prev - 1);
+          const newGameStates = {
+            people: gameStates.people + impact.people,
+            treasury: gameStates.treasury + impact.treasury,
+          };
 
-        // Condition de défaite
-        if (
-          turn >= 3 &&
-          (newGameStates.people <= 0 ||
-            newGameStates.treasury <= 0 ||
-            newGameStates.people >= 2 * newGameStates.treasury ||
-            newGameStates.treasury >= 2 * newGameStates.people ||
-            remainingCards <= 0)
-        ) {
-          setIsGameOver(true);
+          setGameStates(newGameStates);
+          setTurn((prev) => prev + 1);
+          setRemainingCards((prev) => prev - 1);
 
-          return;
-        }
+          // Vérification des conditions de défaite
+          if (
+            turn >= 3 &&
+            (newGameStates.people <= 0 ||
+              newGameStates.treasury <= 0 ||
+              newGameStates.people >= 2 * newGameStates.treasury ||
+              newGameStates.treasury >= 2 * newGameStates.people ||
+              remainingCards <= 0)
+          ) {
+            setIsGameOver(true);
+            return;
+          }
 
-        if (turn >= cards.length) {
-          setIsVictory(true);
+          // Vérification des conditions de victoire
+          if (turn >= cards.length) {
+            setIsVictory(true);
+            return;
+          }
 
-          return;
-        }
-
-        setCurrentCardIndex((prevIndex) => (prevIndex + 1) % cards.length);
+          // Passer à la carte suivante
+          setCurrentCardIndex((prevIndex) => (prevIndex + 1) % cards.length);
+          resetCardPosition();
+        }, 500);
+      } else {
+        // Réinitialiser la position si le choix est invalide
+        resetCardPosition();
       }
-      
-      translateX.value = withSpring(0);
-      rotateValue.value = withTiming(0, { duration: 300 });
     }
   };
 
   const animatedStyle = useAnimatedStyle(() => {
+    const rotateYString = `${rotateY.value}deg`;
+
     return {
       transform: [
         { translateX: translateX.value },
+        { translateY: translateY.value },
         { rotate: `${rotateValue.value}deg` },
+        { scale: scale.value },
+        { perspective: 1000 },
+        { rotateY: rotateYString },
       ],
-      opacity: interpolate(
-        Math.abs(translateX.value),
-        [0, width / 2],
-        [1, 0.5],
-        Extrapolate.CLAMP
-      ),
+      opacity: cardOpacity.value,
+      backfaceVisibility: "hidden",
+    };
+  });
+  const cardBackStyle = useAnimatedStyle(() => {
+    const rotateYString = `${rotateY.value + 180}deg`;
+
+    return {
+      transform: [{ perspective: 1000 }, { rotateY: rotateYString }],
+      opacity: interpolate(rotateY.value, [90, 180], [0, 1], Extrapolate.CLAMP),
+      backfaceVisibility: "hidden",
     };
   });
 
@@ -171,7 +252,6 @@ const ReignsGame = () => {
 
   return (
     <View style={styles.container}>
-      
       {!gameStarted ? (
         <PanGestureHandler
           onGestureEvent={handleGestureEvent}
@@ -179,14 +259,10 @@ const ReignsGame = () => {
         >
           <Animated.View style={[styles.card, animatedStyle]}>
             <Text style={styles.eventText}>Voulez-vous commencer à jouer?</Text>
-            <Animated.Text
-              style={[styles.choiceLabelLeft, choiceLabelLeftStyle]}
-            >
+            <Animated.Text style={[styles.choiceLabelLeft]}>
               Retour
             </Animated.Text>
-            <Animated.Text
-              style={[styles.choiceLabelRight, choiceLabelRightStyle]}
-            >
+            <Animated.Text style={[styles.choiceLabelRight]}>
               Jouer
             </Animated.Text>
           </Animated.View>
@@ -194,19 +270,13 @@ const ReignsGame = () => {
       ) : (
         <>
           <View style={styles.scoreContainer}>
-            <Text style={styles.scoreText}>
-              Population: {gameStates.people}
-            </Text>
-            <Text style={styles.scoreText}>
-              Finances: {gameStates.treasury}
-            </Text>
             <Text style={styles.scoreText}>Cartes: {remainingCards}</Text>
           </View>
 
           <View style={styles.indicators}>
             {[
-              { key: "people", label: "Population" },
-              { key: "treasury", label: "Finances" },
+              { key: "people", label: `Population: ${gameStates.people}` },
+              { key: "treasury", label: `Finances: ${gameStates.treasury}` },
             ].map(({ key, label }) => (
               <View key={key} style={styles.indicatorContainer}>
                 <Text style={styles.indicatorLabel}>{label}</Text>
@@ -226,27 +296,43 @@ const ReignsGame = () => {
             onGestureEvent={handleGestureEvent}
             onHandlerStateChange={handleStateChange}
           >
-            <Animated.View style={[styles.card, animatedStyle]}>
-              {cards[currentCardIndex] && (
-                <Text style={styles.eventText}>
-                  {cards[currentCardIndex].event_description}
-                </Text>
+            <View>
+              {/* Carte actuelle */}
+              <Animated.View style={[styles.card, animatedStyle]}>
+                {cards[currentCardIndex] && (
+                  <Text style={styles.eventText}>
+                    {cards[currentCardIndex].event_description}
+                  </Text>
+                )}
+                <Animated.Text
+                  style={[styles.choiceLabelLeft, choiceLabelLeftStyle]}
+                >
+                  {cards[currentCardIndex]
+                    ? cards[currentCardIndex].choice_2
+                    : "Choix Gauche"}
+                </Animated.Text>
+                <Animated.Text
+                  style={[styles.choiceLabelRight, choiceLabelRightStyle]}
+                >
+                  {cards[currentCardIndex]
+                    ? cards[currentCardIndex].choice_1
+                    : "Choix Droit"}
+                </Animated.Text>
+              </Animated.View>
+
+              {/* Carte suivante */}
+              {currentCardIndex + 1 < cards.length && (
+                <Animated.View style={[styles.cardBack, cardBackStyle]}>
+                  <ImageBackground
+                    source={{ uri: "https://preview.ibb.co/bF05wV/danask.png" }}
+                    style={styles.cardBackImage}
+                    resizeMode="repeat"
+                  >
+                    <View></View>
+                  </ImageBackground>
+                </Animated.View>
               )}
-              <Animated.Text
-                style={[styles.choiceLabelLeft, choiceLabelLeftStyle]}
-              >
-                {cards[currentCardIndex]
-                  ? cards[currentCardIndex].choice_2
-                  : "Choix Gauche"}
-              </Animated.Text>
-              <Animated.Text
-                style={[styles.choiceLabelRight, choiceLabelRightStyle]}
-              >
-                {cards[currentCardIndex]
-                  ? cards[currentCardIndex].choice_1
-                  : "Choix Droit"}
-              </Animated.Text>
-            </Animated.View>
+            </View>
           </PanGestureHandler>
         </>
       )}
@@ -264,10 +350,11 @@ const ReignsGame = () => {
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => {
-                setIsGameOver(false);
+                setIsVictory(false);
                 setTurn(1);
                 setGameStates({ people: 10, treasury: 10 });
                 setCurrentCardIndex(0);
+                setRemainingCards(cards.length);
                 setGameStarted(false);
               }}
             >
@@ -291,7 +378,8 @@ const ReignsGame = () => {
                 setIsGameOver(false);
                 setTurn(1);
                 setGameStates({ people: 10, treasury: 10 });
-                setCurrentCardIndex(0);
+                setCurrentCardIndex(0); // Réinitialiser à la première carte
+                setRemainingCards(cards.length); // Réinitialiser les cartes restantes
                 setGameStarted(false);
               }}
             >
@@ -335,6 +423,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     textTransform: "uppercase",
   },
+
   progressBarBackground: {
     backgroundColor: "#D1D5DB",
     height: 20,
@@ -351,17 +440,38 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     justifyContent: "center",
-    height: 400,
+    height: 300,
+    width: 300, // Taille fixe pour éviter que la carte change
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
   },
+  cardBack: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    height: 300,
+    width: 300,
+    backgroundColor: "#C0C0C0",
+    borderRadius: 20,
+    opacity: 0.8,
+    zIndex: -1,
+  },
   eventText: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "600",
     textAlign: "center",
+    flexWrap: "wrap", // Permet de gérer le texte qui dépasse
+    maxWidth: "90%", // Ajuste le texte dans la carte
+  },
+  cardBackImage: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    borderRadius: 20,
+    overflow: "hidden",
   },
   choiceLabelLeft: {
     position: "absolute",
