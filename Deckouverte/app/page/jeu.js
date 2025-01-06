@@ -13,7 +13,7 @@ export default function GameScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Jeu</Text>
+       <Text style={styles.title}>LOGO</Text>
 
       <View style={styles.buttonsContainer}>
         <Pressable 
@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+    marginTop:20,
   },
   title: {
     fontSize: 24,
