@@ -91,7 +91,7 @@ export default function GameScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroudnColor: "#f8f7ff",
+    backgroundColor: "#f8f7ff",
     alignItems: "center",
   },
   button: {

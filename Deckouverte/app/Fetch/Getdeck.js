@@ -141,7 +141,7 @@ export function Getdeck() {
 
   return (
     <View style={styles.container}>
-      <Pressable style={styles.button} onPress={() => router.back()}>
+      <Pressable style={styles.button} onPress={() => router.push("/")}>
         <Image
           source={require("./../../assets/images/porte.png")}
           style={styles.buttonIcon}
