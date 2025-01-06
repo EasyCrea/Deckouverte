@@ -63,9 +63,10 @@ export default function Index() {
               pressed && styles.buttonPressed
             ]}
           >
-            <Text style={styles.buttonText2}>Joué sans connexion</Text>
+            <Text style={styles.buttonText}>Joué sans connexion</Text>
           </Pressable>
         </View>
+        
 
         <View style={styles.footerSection}>
           <Text style={styles.description}>
