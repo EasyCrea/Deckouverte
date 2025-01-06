@@ -55,7 +55,6 @@ export default function Index() {
             onPress={() =>
               router.push({
                 pathname: "/page/home",
-                params: { user: "user" },
               })
             }
             style={({ pressed }) => [

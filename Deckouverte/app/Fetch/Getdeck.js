@@ -6,12 +6,13 @@ import {
   StyleSheet,
   Pressable,
   TextInput,
+  Image,
   FlatList,
   useWindowDimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
 import API from "../components/API";
-import { validateToken } from "../components/Auth";
+import { validateToken, getAuthToken } from "../components/Auth";
 
 export function Getdeck() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export function Getdeck() {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [idCreateur, setIdCreateur] = useState(null);
+  const [connect, setConnect] = useState(false);
 
   // Calculer le nombre de colonnes en fonction de la largeur de l'écran
   const numColumns = Math.max(1, Math.floor(width / 320));
@@ -29,9 +31,13 @@ export function Getdeck() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const serverResponse = await validateToken();
-        const id_createur = serverResponse.decoded.id;
-        setIdCreateur(id_createur); // Stocker l'id_createur dans un état
+        const tokenexist = await getAuthToken();
+        if (tokenexist) {
+          const serverResponse = await validateToken();
+          const id_createur = serverResponse.decoded.id;
+          setIdCreateur(id_createur); // Stocker l'id_createur dans un état
+          setConnect(true);
+        }
         const response = await API.get("http://localhost:8000/createur");
         setDeck(response.data);
       } catch (error) {
@@ -97,17 +103,18 @@ export function Getdeck() {
           >
             <Text style={styles.detailsButtonText}>Voir les détails →</Text>
           </Pressable>
-
-          <Pressable
-            style={styles.detailsButton2}
-            onPress={() =>
-              router.push(
-                `/page/historique?user_id=${idCreateur}&deck_id=${item.id_deck}`
-              )
-            }
-          >
-            <Text style={styles.detailsButtonText2}>Voir l'historique →</Text>
-          </Pressable>
+          {connect && (
+            <Pressable
+              style={styles.detailsButton2}
+              onPress={() =>
+                router.push(
+                  `/page/historique?user_id=${idCreateur}&deck_id=${item.id_deck}`
+                )
+              }
+            >
+              <Text style={styles.detailsButtonText2}>Voir l'historique →</Text>
+            </Pressable>
+          )}
         </View>
       </Pressable>
     ),
@@ -134,6 +141,12 @@ export function Getdeck() {
 
   return (
     <View style={styles.container}>
+      <Pressable style={styles.button} onPress={() => router.back()}>
+        <Image
+          source={require("./../../assets/images/porte.png")}
+          style={styles.buttonIcon}
+        />
+      </Pressable>
       <Text style={styles.title}>Deckouverte</Text>
 
       <View style={styles.searchContainer}>
@@ -168,6 +181,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f8f7ff",
     padding: 12,
+  },
+  buttonIcon: {
+    width: 34,
+    height: 34,
+    resizeMode: "contain",
+    position: "absolute",
+    right:0,
   },
   row: {
     flex: 1,

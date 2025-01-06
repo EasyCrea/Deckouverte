@@ -22,23 +22,24 @@ export default function GameScreen() {
   const [liked, setLiked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  Secure();
+  const [connect, setConnect] = useState(false);
 
   const confirmLike = async () => {
-
     setLoading(true);
     setError(null);
     try {
       const serverResponse = await validateToken();
-      const id_createur = serverResponse.decoded.id;
-
-      if (!liked) {
-        setLiked(true);
-        await AjoutLike(id, id_createur);
-
+      if (serverResponse) {
+        setConnect(true);
       } else {
-        setLiked(false);
-        await DeleteLike(id, id_createur);
+        const id_createur = serverResponse.decoded.id;
+        if (!liked) {
+          setLiked(true);
+          await AjoutLike(id, id_createur);
+        } else {
+          setLiked(false);
+          await DeleteLike(id, id_createur);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -68,13 +69,16 @@ export default function GameScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <GetDeckById deckId={id} />
-      <TouchableOpacity onPress={confirmLike} style={styles.likeContainer}>
-        <Heart
-          color={liked ? "red" : "#5B3ADD"}
-          fill={liked ? "red" : "none"}
-          size={30}
-        />
-      </TouchableOpacity>
+      {connect &&(
+        <TouchableOpacity onPress={confirmLike} style={styles.likeContainer}>
+          <Heart
+            color={liked ? "red" : "#5B3ADD"}
+            fill={liked ? "red" : "none"}
+            size={30}
+          />
+        </TouchableOpacity>
+      )}
+
       <GetCardInDeck deckId={id} />
       <Pressable style={styles.button} onPress={() => router.back()}>
         <Text style={styles.buttonText}>Retour à la page des decks</Text>
@@ -91,19 +95,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    backgroundColor: '#5B3ADD',
+    backgroundColor: "#5B3ADD",
     paddingVertical: 16,
     paddingHorizontal: 32,
     borderRadius: 16,
     marginBottom: 16,
     marginTop: 20,
-    width: '80%',
+    width: "80%",
     maxWidth: 300,
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   likeContainer: {
     marginTop: 20,
