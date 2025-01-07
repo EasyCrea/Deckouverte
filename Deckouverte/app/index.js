@@ -62,7 +62,7 @@ export default function Index() {
               pressed && styles.buttonPressed
             ]}
           >
-            <Text style={styles.buttonText}>Joué sans connexion</Text>
+            <Text style={styles.buttonText}>Jouer sans connexion</Text>
           </Pressable>
         </View>
         
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 16,
     marginBottom: 16,
-    width: '100%',
+    width: "100%",
     maxWidth: 300,
   },
   buttonPressed: {
