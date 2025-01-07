@@ -4,12 +4,11 @@ import {
   Text,
   ActivityIndicator,
   StyleSheet,
-  Pressable,
 } from "react-native";
 import { useRouter } from "expo-router";
 import API from "../components/API";
 
-export function GetCardInDeck({ deckId }) {
+export default function GetCardInDeck({ deckId }) {
   const router = useRouter();
 
   const [cards, setCards] = useState(null);

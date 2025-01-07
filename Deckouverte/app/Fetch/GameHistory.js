@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  ActivityIndicator,
-  StyleSheet,
-} from "react-native";
-import { useRouter } from "expo-router";
+import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
+
 import API from "../components/API";
 
-export function GameHistory({ userId, deckId }) {
-  const router = useRouter();
-
+export default function GameHistory({ userId, deckId }) {
+ 
   const [gameHistory, setGameHistory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -63,14 +57,29 @@ export function GameHistory({ userId, deckId }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Historique de jeu</Text>
       {gameHistory.map((historyItem, index) => (
         <View key={index} style={styles.historyItem}>
-          <Text style={styles.text}>Date: {historyItem.game_date}</Text>
-          <Text style={styles.text}>Nombre de tours: {historyItem.turn_count}</Text>
-          <Text style={styles.text}>Population finale: {historyItem.final_people}</Text>
-          <Text style={styles.text}>Trésorerie finale: {historyItem.final_treasury}</Text>
+          <Text style={styles.textIndicator}>{index + 1}</Text>
           <Text style={styles.text}>
+            {" "}
+            {new Date(historyItem.game_date).toLocaleDateString("fr-FR", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })}
+          </Text>
+          <Text style={styles.text}>
+            {historyItem.turn_count} tours
+          </Text>
+          <View style={styles.stats}>
+            <Text style={styles.statstext}>
+              <Text style={{fontWeight: "bold"}}>Population finale:</Text><Text> {historyItem.final_people}</Text>
+            </Text>
+            <Text style={styles.statstext}>
+              <Text style={{fontWeight: "bold"}}>Trésorerie finale:</Text><Text>{historyItem.final_treasury}</Text> 
+            </Text>
+          </View>
+          <Text style={styles.textwin}>
             {historyItem.is_winner ? "Victoire" : "Défaite"}
           </Text>
         </View>
@@ -82,21 +91,35 @@ export function GameHistory({ userId, deckId }) {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
+    width: "100%",
   },
   historyItem: {
+    alignItems: "center",
     marginBottom: 15,
-    padding: 10,
+    padding: 20,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#5B3ADD",
     borderRadius: 5,
   },
   text: {
     fontSize: 16,
+    marginBottom: 5,
+  },
+  textIndicator: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#5B3ADD",
+    marginBottom: 5,
+  },
+  stats: {
+    flexDirection: "row",
+    gap: 15,
+  },
+  statstext: {
+    fontSize: 16,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
     marginBottom: 5,
   },
   errorText: {
@@ -106,5 +129,10 @@ const styles = StyleSheet.create({
   emptyStateText: {
     fontSize: 16,
     color: "gray",
+  },
+  textwin: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#5B3ADD",
   },
 });

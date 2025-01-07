@@ -14,7 +14,7 @@ import { useRouter } from "expo-router";
 import API from "../components/API";
 import { validateToken, getAuthToken } from "../components/Auth";
 
-export function Getdeck() {
+export default function Getdeck() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const [deck, setDeck] = useState(null);
@@ -185,7 +185,6 @@ const styles = StyleSheet.create({
   buttonIcon: {
     width: 34,
     height: 34,
-    resizeMode: "contain",
     position: "absolute",
     right:0,
   },

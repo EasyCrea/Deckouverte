@@ -8,9 +8,8 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { GetDeckById } from "../Fetch/GetDeckById";
-import { Secure } from "../components/Secure";
-import { GetCardInDeck } from "../Fetch/GetCardInDeck";
+import  GetDeckById  from "../Fetch/GetDeckById";
+import  GetCardInDeck  from "../Fetch/GetCardInDeck";
 import { Heart } from "lucide-react-native";
 import { AjoutLike, RecupererLike, DeleteLike } from "../components/Auth";
 import { validateToken } from "../components/Auth";

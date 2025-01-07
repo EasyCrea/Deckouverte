@@ -3,7 +3,7 @@ import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import API from "../components/API";
 
-export function GetDeckById({ deckId }) {
+export default function GetDeckById({ deckId }) {
   const router = useRouter();
 
   const [deck, setDeck] = useState(null);

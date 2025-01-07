@@ -137,10 +137,10 @@ const ReignsGame = () => {
 
       // Logique pour démarrer ou quitter le jeu
       if (!gameStarted) {
-        if (choice === "right") {
+        if (choice === "left") {
           setGameStarted(true);
           resetCardPosition();
-        } else if (choice === "left") {
+        } else if (choice === "right") {
           router.push("/page/home");
         }
         return;
