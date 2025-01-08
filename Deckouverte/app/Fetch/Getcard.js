@@ -19,6 +19,7 @@ import Animated, {
   runOnJS,
 } from "react-native-reanimated";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { AjoutHistorique, validateToken } from "../components/Auth";
 
 const { width, height } = Dimensions.get("window");
 
@@ -39,6 +40,23 @@ const ReignsGame = () => {
   const rotateY = useSharedValue(0);
   const scale = useSharedValue(1);
   const cardOpacity = useSharedValue(1);
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    const getUserId = async () => {
+      try {
+        const serverResponse = await validateToken();
+        if (serverResponse) {
+          const id_createur = serverResponse.decoded.id;
+          setUserId(id_createur);
+        }
+      } catch (error) {
+        console.error(error);
+        setError("id créateur  non récupéré");
+      }
+    };
+    getUserId();
+  }, []);
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -62,6 +80,21 @@ const ReignsGame = () => {
       fetchCards();
     }
   }, [gameStarted, id]);
+
+  const saveGame = async () => {
+    try {
+      await AjoutHistorique({
+        user_id: userId,
+        deck_id: id, // vous avez déjà l'id du deck dans les params
+        turn_count: turn+1,
+        final_people: gameStates.people,
+        final_treasury: gameStates.treasury,
+        is_winner: isVictory===true ? 1 : 0
+      });
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement de la victoire:", error);
+    }
+  };
 
   const handleGestureEvent = ({ nativeEvent }) => {
     translateX.value = nativeEvent.translationX;
@@ -186,12 +219,14 @@ const ReignsGame = () => {
               remainingCards <= 0)
           ) {
             setIsGameOver(true);
+            saveGame();
             return;
           }
 
           // Vérification des conditions de victoire
           if (turn >= cards.length) {
             setIsVictory(true);
+            saveGame();
             return;
           }
 

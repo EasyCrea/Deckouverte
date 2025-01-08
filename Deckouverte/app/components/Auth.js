@@ -61,6 +61,16 @@ export const DeleteLike = async (id_deck, id_createur) => {
     throw error;
   }
 }
+export const AjoutHistorique = async (data) => {
+  try {
+    console.log(data);
+    const response = await API.post("/creategamehistory", data);
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de l'ajout de l'historique :", error.message);
+    throw error;
+  }
+}
 
 export const validateToken = async () => {
   try {
