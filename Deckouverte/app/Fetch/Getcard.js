@@ -41,6 +41,7 @@ const ReignsGame = () => {
   const scale = useSharedValue(1);
   const cardOpacity = useSharedValue(1);
   const [userId, setUserId] = useState(null);
+  const [connexion, setConnexion] = useState(false);
 
   useEffect(() => {
     const getUserId = async () => {
@@ -49,6 +50,7 @@ const ReignsGame = () => {
         if (serverResponse) {
           const id_createur = serverResponse.decoded.id;
           setUserId(id_createur);
+          setConnexion(true);
         }
       } catch (error) {
         console.error(error);
@@ -82,18 +84,24 @@ const ReignsGame = () => {
   }, [gameStarted, id]);
 
   const saveGame = async () => {
-    try {
-      await AjoutHistorique({
-        user_id: userId,
-        deck_id: id, // vous avez déjà l'id du deck dans les params
-        turn_count: turn+1,
-        final_people: gameStates.people,
-        final_treasury: gameStates.treasury,
-        is_winner: isVictory===true ? 1 : 0
-      });
-    } catch (error) {
-      console.error("Erreur lors de l'enregistrement de la victoire:", error);
+    if (connexion){
+      try {
+        await AjoutHistorique({
+          user_id: userId,
+          deck_id: id, // vous avez déjà l'id du deck dans les params
+          turn_count: turn+1,
+          final_people: gameStates.people,
+          final_treasury: gameStates.treasury,
+          is_winner: isVictory===true ? 1 : 0
+        });
+      } catch (error) {
+        console.error("Erreur lors de l'enregistrement de la victoire:", error);
+      }
     }
+    else {
+      console.log("utilisateur non connecté");
+    }
+    
   };
 
   const handleGestureEvent = ({ nativeEvent }) => {
