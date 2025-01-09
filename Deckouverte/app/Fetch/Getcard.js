@@ -43,7 +43,15 @@ const ReignsGame = () => {
   const [userId, setUserId] = useState(null);
   const [connexion, setConnexion] = useState(false);
   const [error, setError] = useState("");
-
+  const resetAnimationValues = () => {
+    translateX.value = 0;
+    translateY.value = 0;
+    rotateValue.value = 0;
+    rotateY.value = 0;
+    scale.value = 1;
+    cardOpacity.value = 1;
+  };
+  
   useEffect(() => {
     const getUserId = async () => {
       try {
@@ -85,24 +93,22 @@ const ReignsGame = () => {
   }, [gameStarted, id]);
 
   const saveGame = async () => {
-    if (connexion){
+    if (connexion) {
       try {
         await AjoutHistorique({
           user_id: userId,
           deck_id: id, // vous avez déjà l'id du deck dans les params
-          turn_count: turn+1,
+          turn_count: turn + 1,
           final_people: gameStates.people,
           final_treasury: gameStates.treasury,
-          is_winner: isVictory===true ? 1 : 0
+          is_winner: isVictory === true ? 1 : 0,
         });
       } catch (error) {
         console.error("Erreur lors de l'enregistrement de la victoire:", error);
       }
-    }
-    else {
+    } else {
       console.log("utilisateur non connecté");
     }
-    
   };
 
   const handleGestureEvent = ({ nativeEvent }) => {
@@ -388,18 +394,37 @@ const ReignsGame = () => {
             <Text style={styles.modalText}>
               Vous avez gagné en {turn} tours.
             </Text>
-            <TouchableOpacity style={styles.modalButton} onPress={() => router.push("/page/home")}>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => router.push("/page/home")}
+            >
               <Text style={styles.modalButtonText}>Quitter</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => {
+                // Réinitialiser tous les états
                 setIsVictory(false);
+                setIsGameOver(false);
                 setTurn(1);
                 setGameStates({ people: 10, treasury: 10 });
                 setCurrentCardIndex(0);
                 setRemainingCards(cards.length);
-                setGameStarted(false);
+
+                // S'assurer que l'animation est réinitialisée
+                if (translateX) {
+                  translateX.setValue(0);
+                }
+
+                // Réinitialiser les styles d'animation si nécessaire
+                if (animatedStyle) {
+                  animatedStyle.transform = [{ translateX: translateX }];
+                }
+
+                // Attendre que les états soient mis à jour avant de redémarrer
+                setTimeout(() => {
+                  setGameStarted(true);
+                }, 100);
               }}
             >
               <Text style={styles.modalButtonText}>Recommencer</Text>
@@ -416,22 +441,34 @@ const ReignsGame = () => {
             <Text style={styles.modalText}>
               Votre partie s'est terminée après {turn} tours.
             </Text>
-            <TouchableOpacity  style={styles.modalButton} onPress={() => router.push("/page/home")}>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => router.push("/page/home")}
+            >
               <Text style={styles.modalButtonText}>Quitter</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.modalButton}
-              onPress={() => {
-                setIsVictory(false);
-                setTurn(1);
-                setGameStates({ people: 10, treasury: 10 });
-                setCurrentCardIndex(0);
-                setRemainingCards(cards.length);
-                setGameStarted(false);
-              }}
-            >
-              <Text style={styles.modalButtonText}>Recommencer</Text>
-            </TouchableOpacity>
+  style={styles.modalButton}
+  onPress={() => {
+    // Réinitialiser les états du jeu
+    setIsVictory(false);
+    setIsGameOver(false);
+    setTurn(1);
+    setGameStates({ people: 10, treasury: 10 });
+    setCurrentCardIndex(0);
+    setRemainingCards(cards.length);
+    resetAnimationValues();
+    // Réinitialiser le jeu avec un petit délai
+    setTimeout(() => {
+      setGameStarted(false);  // D'abord mettre à false
+      setTimeout(() => {
+        setGameStarted(true); // Puis remettre à true pour "redémarrer"
+      }, 50);
+    }, 50);
+  }}
+>
+  <Text style={styles.modalButtonText}>Recommencer</Text>
+</TouchableOpacity>
           </View>
         </View>
       </Modal>
