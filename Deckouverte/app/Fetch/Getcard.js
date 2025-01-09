@@ -42,6 +42,7 @@ const ReignsGame = () => {
   const cardOpacity = useSharedValue(1);
   const [userId, setUserId] = useState(null);
   const [connexion, setConnexion] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const getUserId = async () => {
