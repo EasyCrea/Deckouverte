@@ -171,9 +171,9 @@ const ReignsGame = () => {
     if (nativeEvent.state === State.END) {
       const choice =
         nativeEvent.translationX > 100
-          ? "left"
-          : nativeEvent.translationX < -100
           ? "right"
+          : nativeEvent.translationX < -100
+          ? "left"
           : null;
 
       // Logique pour démarrer ou quitter le jeu
@@ -387,7 +387,7 @@ const ReignsGame = () => {
             <Text style={styles.modalText}>
               Vous avez gagné en {turn} tours.
             </Text>
-            <TouchableOpacity onPress={() => router.push("/page/home")}>
+            <TouchableOpacity style={styles.modalButton} onPress={() => router.push("/page/home")}>
               <Text style={styles.modalButtonText}>Quitter</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -415,14 +415,17 @@ const ReignsGame = () => {
             <Text style={styles.modalText}>
               Votre partie s'est terminée après {turn} tours.
             </Text>
+            <TouchableOpacity  style={styles.modalButton} onPress={() => router.push("/page/home")}>
+              <Text style={styles.modalButtonText}>Quitter</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => {
-                setIsGameOver(false);
+                setIsVictory(false);
                 setTurn(1);
                 setGameStates({ people: 10, treasury: 10 });
-                setCurrentCardIndex(0); // Réinitialiser à la première carte
-                setRemainingCards(cards.length); // Réinitialiser les cartes restantes
+                setCurrentCardIndex(0);
+                setRemainingCards(cards.length);
                 setGameStarted(false);
               }}
             >
