@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
+import { View, Text, ActivityIndicator, StyleSheet, Pressable } from "react-native";
+import {RecupererHistorique, DeleteHistorique} from "../components/Historique";
 
-import API from "../components/API";
 
 export default function GameHistory({ userId, deckId }) {
  
@@ -12,22 +12,27 @@ export default function GameHistory({ userId, deckId }) {
   useEffect(() => {
     const fetchGameHistory = async () => {
       try {
-        const response = await API.get(
-          `http://localhost:8000/gamehistory/${userId}/${deckId}`
-        );
-        const json = await response.data;
-        setGameHistory(json.game_history);
+        const reponse = await RecupererHistorique(userId, deckId);
+        setGameHistory(reponse.game_history);
+        setLoading(false); // N'oubliez pas de mettre loading à false en cas de succès
       } catch (error) {
-        setError({
-          message: error?.message || "Une erreur est survenue",
-        });
-      } finally {
+        setError(error);
         setLoading(false);
       }
     };
-
+  
+    // Appeler la fonction
     fetchGameHistory();
+   
   }, [userId, deckId]);
+
+  const Deletehistory = async (id) => {
+    try {
+      await DeleteHistorique(id);
+    } catch (error) {
+      setError(error);
+    }
+  };
 
   if (loading) {
     return (
@@ -82,6 +87,9 @@ export default function GameHistory({ userId, deckId }) {
           <Text style={styles.textwin}>
             {historyItem.is_winner ? "Victoire" : "Défaite"}
           </Text>
+          <Pressable onPress={Deletehistory}>
+            <Text style={{color: "red"}}>Supprimer</Text>
+          </Pressable>
         </View>
       ))}
     </View>

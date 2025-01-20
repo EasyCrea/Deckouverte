@@ -28,53 +28,66 @@ export default function GameScreen() {
     setError(null);
     try {
       const serverResponse = await validateToken();
-      if (serverResponse) {
-        setConnect(true);
+      if (!serverResponse) {
+        setConnect(false);
+        return;
+      }
+      
+      const id_createur = serverResponse.decoded.id;
+      if (!liked) {
+        await AjoutLike(id, id_createur);
+        setLiked(true);
       } else {
-        const id_createur = serverResponse.decoded.id;
-        if (!liked) {
-          setLiked(true);
-          await AjoutLike(id, id_createur);
-        } else {
-          setLiked(false);
-          await DeleteLike(id, id_createur);
-        }
+        await DeleteLike(id, id_createur);
+        setLiked(false);
       }
     } catch (error) {
       console.error(error);
       setError("Failed to add like");
-      setLiked(false);
     } finally {
       setLoading(false);
     }
   };
-  const clientLike = async () => {
+
+  const checkConnectionAndLike = async () => {
     try {
       const serverResponse = await validateToken();
-      const id_createur = serverResponse.decoded.id;
-      const userLike = await RecupererLike(id, id_createur);
-      if (userLike.status === "success") {
-        setLiked(true);
+      if (serverResponse) {
+        setConnect(true);
+        const id_createur = serverResponse.decoded.id;
+        const userLike = await RecupererLike(id, id_createur);
+        if (userLike.status === "success") {
+          setLiked(true);
+        }
       }
     } catch (error) {
       console.error(error);
+      setConnect(false);
     }
   };
 
   useEffect(() => {
-    clientLike();
+    checkConnectionAndLike();
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <GetDeckById deckId={id} />
-      {connect &&(
-        <TouchableOpacity onPress={confirmLike} style={styles.likeContainer}>
-          <Heart
-            color={liked ? "red" : "#5B3ADD"}
-            fill={liked ? "red" : "none"}
-            size={30}
-          />
+      {connect && (
+        <TouchableOpacity 
+          onPress={confirmLike} 
+          style={styles.likeContainer}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator size="small" color="#5B3ADD" />
+          ) : (
+            <Heart
+              color={liked ? "red" : "#5B3ADD"}
+              fill={liked ? "red" : "none"}
+              size={30}
+            />
+          )}
         </TouchableOpacity>
       )}
 

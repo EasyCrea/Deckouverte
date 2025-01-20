@@ -19,7 +19,8 @@ import Animated, {
   runOnJS,
 } from "react-native-reanimated";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { AjoutHistorique, validateToken } from "../components/Auth";
+import { validateToken } from "../components/Auth";
+import { AjoutHistorique } from "../components/Historique";
 
 const { width, height } = Dimensions.get("window");
 
