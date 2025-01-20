@@ -29,6 +29,10 @@ export default function GameHistory({ userId, deckId }) {
   const Deletehistory = async (id) => {
     try {
       await DeleteHistorique(id);
+      // Mettre à jour l'état en filtrant l'élément supprimé
+      setGameHistory(prevHistory => 
+        prevHistory.filter(item => item.id !== id)
+      );
     } catch (error) {
       setError(error);
     }
@@ -87,7 +91,7 @@ export default function GameHistory({ userId, deckId }) {
           <Text style={styles.textwin}>
             {historyItem.is_winner ? "Victoire" : "Défaite"}
           </Text>
-          <Pressable onPress={Deletehistory}>
+          <Pressable onPress={() => Deletehistory(historyItem.id)}>
             <Text style={{color: "red"}}>Supprimer</Text>
           </Pressable>
         </View>
