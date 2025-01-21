@@ -31,7 +31,7 @@ export const RecupererCartes = async (id, gameStarted) => {
   export const getAllDecks = async () => {
     try {
       const response = await API.get(
-        `http://localhost:8000/getAllDeck`
+        `/getAllDeck`
       );
       return response;
     } catch (error) {
@@ -43,7 +43,7 @@ export const RecupererCartes = async (id, gameStarted) => {
   export const getParticipants = async (id) => {
     try{
       const response = await API.get(
-        `http://localhost:8000/createur/participants/${id}`
+        `/createur/participants/${id}`
       );
       return response.data;
     } catch (error) {

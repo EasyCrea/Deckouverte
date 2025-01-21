@@ -4,7 +4,7 @@ export const getCards = async (id) => {
   try {
     console.log(data);
     const response = await API.get(
-      `http://localhost:8000/createur/deckCard/${id}`
+      `/createur/deckCard/${id}`
     );
     return response.data;
   } catch (error) {
