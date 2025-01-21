@@ -3,7 +3,7 @@ import API from "./API";
 export const getCards = async (id) => {
   try {
     console.log(data);
-    const response = await API.post(
+    const response = await API.get(
       `http://localhost:8000/createur/deckCard/${id}`
     );
     return response.data;

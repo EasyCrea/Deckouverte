@@ -11,7 +11,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { getAllDeck } from "../fetch/Deck";
+import { getAllDecks } from "../fetch/Deck";
 import { validateToken, getAuthToken } from "../fetch/Auth";
 
 export default function Getdeck() {
@@ -38,7 +38,8 @@ export default function Getdeck() {
           setIdCreateur(id_createur); // Stocker l'id_createur dans un état
           setConnect(true);
         }
-        const response = await getAllDeck();
+        const response = await getAllDecks();
+        console.log(response);
         setDeck(response.data);
       } catch (error) {
         setError({

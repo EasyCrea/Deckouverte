@@ -27,3 +27,27 @@ export const RecupererCartes = async (id, gameStarted) => {
       throw error;
     }
   };
+
+  export const getAllDecks = async () => {
+    try {
+      const response = await API.get(
+        `http://localhost:8000/getAllDeck`
+      );
+      return response;
+    } catch (error) {
+      console.error("Erreur lors de la récupération des decks:", error.message);
+      throw error;
+    }
+  };
+
+  export const getParticipants = async (id) => {
+    try{
+      const response = await API.get(
+        `http://localhost:8000/createur/participants/${id}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Erreur lors de la récupération des decks:", error.message);
+      throw error;
+    }
+    }
