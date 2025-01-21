@@ -16,7 +16,7 @@ export default function GameScreen() {
       <View style={styles.buttonsContainer}>
         <Pressable 
           style={styles.button} 
-          onPress={() => router.back()}
+          onPress={() => router.push('/page/home')}
         >
           <AntDesign name="arrowleft" size={20} color="white" style={styles.buttonIcon} />
           <Text style={styles.buttonText}>Retour</Text>
