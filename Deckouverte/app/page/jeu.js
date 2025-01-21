@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable, StyleSheet, Modal } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import CardSwipe from './../Fetch/Getcard';
+import CardSwipe from './../components/Getcard';
 import { AntDesign } from '@expo/vector-icons';
 
 export default function GameScreen() {

@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
-import { registerCreateur } from "../../components/Auth";
+import { registerCreateur } from "../../fetch/Auth";
 import { Picker } from "@react-native-picker/picker";
 
 export function Register() {

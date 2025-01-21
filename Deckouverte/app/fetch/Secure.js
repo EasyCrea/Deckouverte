@@ -1,4 +1,4 @@
-import { validateToken } from "../components/Auth";
+import { validateToken } from "./Auth";
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 

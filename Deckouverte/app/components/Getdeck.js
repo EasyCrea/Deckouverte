@@ -11,8 +11,8 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
-import API from "../components/API";
-import { validateToken, getAuthToken } from "../components/Auth";
+import { getAllDeck } from "../fetch/Deck";
+import { validateToken, getAuthToken } from "../fetch/Auth";
 
 export default function Getdeck() {
   const router = useRouter();
@@ -38,7 +38,7 @@ export default function Getdeck() {
           setIdCreateur(id_createur); // Stocker l'id_createur dans un état
           setConnect(true);
         }
-        const response = await API.get("http://localhost:8000/createur");
+        const response = await getAllDeck();
         setDeck(response.data);
       } catch (error) {
         setError({

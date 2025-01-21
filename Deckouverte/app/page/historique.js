@@ -1,7 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet, Pressable, SafeAreaView, ScrollView } from "react-native";
+import { Text, StyleSheet, Pressable, SafeAreaView, ScrollView } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import GameHistory from "../Fetch/GameHistory";
+import GameHistory from "../components/GameHistory";
 import { useRouter } from "expo-router";
 
 export default function HistoriqueScreen() {

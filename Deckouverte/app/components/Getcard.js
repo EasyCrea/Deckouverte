@@ -19,8 +19,10 @@ import Animated, {
   runOnJS,
 } from "react-native-reanimated";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { validateToken } from "../components/Auth";
-import { AjoutHistorique } from "../components/Historique";
+import { validateToken } from "../fetch/Auth";
+import { AjoutHistorique } from "../fetch/Historique";
+import { RecupererCartes } from "../fetch/Deck";
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -44,6 +46,7 @@ const ReignsGame = () => {
   const [userId, setUserId] = useState(null);
   const [connexion, setConnexion] = useState(false);
   const [error, setError] = useState("");
+
   const resetAnimationValues = () => {
     translateX.value = 0;
     translateY.value = 0;
@@ -52,7 +55,7 @@ const ReignsGame = () => {
     scale.value = 1;
     cardOpacity.value = 1;
   };
-  
+
   useEffect(() => {
     const getUserId = async () => {
       try {
@@ -61,37 +64,15 @@ const ReignsGame = () => {
           const id_createur = serverResponse.decoded.id;
           setUserId(id_createur);
           setConnexion(true);
+        } else {
+          console.error("Aucun utilisateur trouvé.");
         }
       } catch (error) {
-        console.error(error);
-        setError("id créateur  non récupéré");
+        console.error("Erreur lors de la récupération du jeton :", error);
       }
     };
     getUserId();
   }, []);
-
-  useEffect(() => {
-    const fetchCards = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:8000/createur/deckCard/${id}`
-        );
-        const data = await response.json();
-        if (data.status === "success" && Array.isArray(data.cards)) {
-          setCards(data.cards);
-          setRemainingCards(data.cards.length);
-        } else {
-          console.error("Invalid card data format");
-        }
-      } catch (error) {
-        console.error("Error loading cards:", error);
-      }
-    };
-
-    if (gameStarted && id) {
-      fetchCards();
-    }
-  }, [gameStarted, id]);
 
   const saveGame = async () => {
     if (connexion) {
@@ -111,6 +92,20 @@ const ReignsGame = () => {
       console.log("utilisateur non connecté");
     }
   };
+
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const cartes = await RecupererCartes(id, gameStarted);
+        setCards(cartes);
+        setRemainingCards(cartes.length);
+      } catch (error) {
+        console.error("Erreur lors du chargement des cartes :", error.message);
+      }
+    };
+
+    fetchCards();
+  }, [gameStarted, id]);
 
   const handleGestureEvent = ({ nativeEvent }) => {
     translateX.value = nativeEvent.translationX;
@@ -186,10 +181,10 @@ const ReignsGame = () => {
 
       // Logique pour démarrer ou quitter le jeu
       if (!gameStarted) {
-        if (choice === "left") {
+        if (choice === "right") {
           setGameStarted(true);
           resetCardPosition();
-        } else if (choice === "right") {
+        } else if (choice === "left") {
           router.push("/page/home");
         }
         return;
