@@ -19,9 +19,9 @@ import Animated, {
   runOnJS,
 } from "react-native-reanimated";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { validateToken } from "../components/Auth";
-import { AjoutHistorique } from "../components/Historique";
-import { RecupererCartes } from "../components/Deck";
+import { validateToken } from "../fetch/Auth";
+import { AjoutHistorique } from "../fetch/Historique";
+import { RecupererCartes } from "../fetch/Deck";
 
 
 const { width, height } = Dimensions.get("window");

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable, StyleSheet, Modal } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import CardSwipe from './../Fetch/Getcard';
+import CardSwipe from './../components/Getcard';
 import { AntDesign } from '@expo/vector-icons';
 
 export default function GameScreen() {
@@ -16,7 +16,7 @@ export default function GameScreen() {
       <View style={styles.buttonsContainer}>
         <Pressable 
           style={styles.button} 
-          onPress={() => router.push('/page/home')}
+          onPress={() => router.back()}
         >
           <AntDesign name="arrowleft" size={20} color="white" style={styles.buttonIcon} />
           <Text style={styles.buttonText}>Retour</Text>

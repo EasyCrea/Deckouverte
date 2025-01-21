@@ -6,7 +6,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useRouter } from "expo-router";
-import API from "../components/API";
+import { getParticipants } from "../fetch/Deck";
 
 export default function GetCardInDeck({ deckId }) {
   const router = useRouter();
@@ -18,9 +18,8 @@ export default function GetCardInDeck({ deckId }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await API.get(`http://localhost:8000/createur/participants/${deckId}`);
-        const json = await response.data;
-        setCards(json);
+        const response = await getParticipants(deckId);
+        setCards(response);
       } catch (error) {
         setError({
           message: error?.message || "Une erreur est survenue",

@@ -9,7 +9,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { loginCreateur } from "../../components/Auth";
+import { loginCreateur } from "../../fetch/Auth";
 import { useRouter } from "expo-router";
 
 export function Login() {
