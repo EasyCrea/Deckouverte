@@ -2,7 +2,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const API = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: "https://easydeck.alwaysdata.net/api",
   withCredentials: true,
 });
 

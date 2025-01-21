@@ -1,5 +1,11 @@
 import React from "react";
-import { Text, StyleSheet, Pressable, SafeAreaView, ScrollView } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+} from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import GameHistory from "../components/GameHistory";
 import { useRouter } from "expo-router";
@@ -46,7 +52,7 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   button: {
-    backgroundColor: '#5B3ADD',
+    backgroundColor: "#5B3ADD",
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 16,
@@ -54,10 +60,10 @@ const styles = StyleSheet.create({
     width: 200,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 14,
-    textAlign: 'center',
-    fontWeight: '600',
+    textAlign: "center",
+    fontWeight: "600",
     letterSpacing: 0.5,
   },
   errorText: {

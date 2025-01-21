@@ -1,0 +1,98 @@
+/* Boutons */
+.btn {
+  display: inline-block;
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+}
+
+.btn-filled {
+  background-color: var(--indigo-600);
+  color: #fff;
+}
+
+.btn-filled:hover {
+  background-color: var(--indigo-700);
+}
+
+.btn-outline {
+  background-color: white;
+  color: var(--indigo-600);
+  border: 2px solid var(--indigo-600);
+}
+
+.btn-outline:hover {
+  background-color: var(--indigo-100);
+}
+
+.btn-shadow {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+.btn-view {
+  background-color: var(--purple-background);
+  color: var(--indigo-600);
+  margin: 0 0.5rem;
+}
+
+.btn-view:hover {
+  background-color: var(--purple-100);
+}
+
+.btn-delete {
+  background-color: var(--pink-background);
+  color: var(--pink);
+}
+
+.btn-delete:hover {
+  background-color: var(--pink-100);
+}
+
+.btn-activate {
+  background-color: var(--color-success-background);
+  color: var(--color-success);
+  margin-right: 0.5rem;
+}
+
+.btn-deactivate {
+  background-color: var(--color-danger-background);
+  color: var(--color-danger);
+  margin-right: 0.5rem;
+}
+
+.btn-cta {
+  background-color: var(--indigo-600); /* indigo-600 */
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-cta:hover {
+  background-color: var(
+    --indigo-700
+  ); /* indigo-700 pour un effet de hover plus foncé */
+}
+
+.btn-cta:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+}
+
+.btn-cta:active {
+  transform: translateY(1px);
+}
+
+.btn-edit {
+  background-color: var(--yellow-background);
+  color: var(--yellow);
+}

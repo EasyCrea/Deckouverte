@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ActivityIndicator, StyleSheet, Pressable } from "react-native";
-import {RecupererHistorique, DeleteHistorique} from "../fetch/Historique";
-
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+  Pressable,
+} from "react-native";
+import { buttonStyles } from "../styles/buttons.js";
+import { RecupererHistorique, DeleteHistorique } from "../fetch/Historique";
 
 export default function GameHistory({ userId, deckId }) {
- 
   const [gameHistory, setGameHistory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,24 +19,21 @@ export default function GameHistory({ userId, deckId }) {
       try {
         const reponse = await RecupererHistorique(userId, deckId);
         setGameHistory(reponse.game_history);
-        setLoading(false); // N'oubliez pas de mettre loading à false en cas de succès
+        setLoading(false);
       } catch (error) {
         setError(error);
         setLoading(false);
       }
     };
-  
-    // Appeler la fonction
+
     fetchGameHistory();
-   
   }, [userId, deckId]);
 
   const Deletehistory = async (id) => {
     try {
       await DeleteHistorique(id);
-      // Mettre à jour l'état en filtrant l'élément supprimé
-      setGameHistory(prevHistory => 
-        prevHistory.filter(item => item.id !== id)
+      setGameHistory((prevHistory) =>
+        prevHistory.filter((item) => item.id !== id)
       );
     } catch (error) {
       setError(error);
@@ -41,7 +43,7 @@ export default function GameHistory({ userId, deckId }) {
   if (loading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#5B3ADD" />
       </View>
     );
   }
@@ -70,29 +72,40 @@ export default function GameHistory({ userId, deckId }) {
         <View key={index} style={styles.historyItem}>
           <Text style={styles.textIndicator}>{index + 1}</Text>
           <Text style={styles.text}>
-            {" "}
             {new Date(historyItem.game_date).toLocaleDateString("fr-FR", {
               day: "2-digit",
               month: "long",
               year: "numeric",
             })}
           </Text>
-          <Text style={styles.text}>
-            {historyItem.turn_count} tours
-          </Text>
+          <Text style={styles.text}>{historyItem.turn_count} tours</Text>
           <View style={styles.stats}>
             <Text style={styles.statstext}>
-              <Text style={{fontWeight: "bold"}}>Population finale:</Text><Text> {historyItem.final_people}</Text>
+              <Text style={styles.statsBold}>Population finale: </Text>
+              <Text>{historyItem.final_people}</Text>
             </Text>
             <Text style={styles.statstext}>
-              <Text style={{fontWeight: "bold"}}>Trésorerie finale:</Text><Text>{historyItem.final_treasury}</Text> 
+              <Text style={styles.statsBold}>Trésorerie finale: </Text>
+              <Text>{historyItem.final_treasury}</Text>
             </Text>
           </View>
-          <Text style={styles.textwin}>
+          <Text
+            style={[
+              styles.textwin,
+              historyItem.is_winner ? styles.victoryText : styles.defeatText,
+            ]}
+          >
             {historyItem.is_winner ? "Victoire" : "Défaite"}
           </Text>
-          <Pressable onPress={() => Deletehistory(historyItem.id)}>
-            <Text style={{color: "red"}}>Supprimer</Text>
+          <Pressable
+            style={({ pressed }) => [
+              styles.btn,
+              styles.btnDelete,
+              pressed && styles.btnPressed,
+            ]}
+            onPress={() => Deletehistory(historyItem.id)}
+          >
+            <Text style={styles.btnText}>Supprimer</Text>
           </Pressable>
         </View>
       ))}
@@ -129,10 +142,10 @@ const styles = StyleSheet.create({
   },
   statstext: {
     fontSize: 16,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
     marginBottom: 5,
+  },
+  statsBold: {
+    fontWeight: "bold",
   },
   errorText: {
     color: "red",
@@ -145,6 +158,40 @@ const styles = StyleSheet.create({
   textwin: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#5B3ADD",
+    marginBottom: 10,
+  },
+  victoryText: {
+    color: "#4CAF50",
+  },
+  defeatText: {
+    color: "#F44336",
+  },
+  // Styles de bouton
+  btn: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    elevation: 2, // Pour Android
+    shadowColor: "#000", // Pour iOS
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  btnDelete: {
+    backgroundColor: "#FFF1F0", // Couleur de fond rose clair
+    borderWidth: 1,
+    borderColor: "#FF4D4F",
+  },
+  btnPressed: {
+    opacity: 0.7,
+  },
+  btnText: {
+    color: "#FF4D4F", // Rouge pour le texte du bouton supprimer
+    fontSize: 14,
+    fontWeight: "600",
+    textAlign: "center",
   },
 });
