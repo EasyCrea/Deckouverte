@@ -131,4 +131,25 @@ export const buttonStyles = StyleSheet.create({
   btnPressed: {
     opacity: 0.8,
   },
+
+  // Back Button
+  btnBack: {
+    backgroundColor: colors.pinkBackground,
+    paddingVertical: 12, // 0.7rem
+    paddingHorizontal: 16, // 1rem
+    borderRadius: 8, // 0.5rem
+    fontSize: 14, // 0.9rem
+    fontWeight: "700", // bold
+    textAlign: "center",
+    cursor: "pointer",
+    transition: `all ${colors.transitionSpeed}`, // Ajout d'une transition
+  },
+  btnBackHover: {
+    backgroundColor: colors.pinkBackgroundHover,
+  },
+  btnBackFocus: {
+    borderWidth: 1,
+    borderColor: colors.indigo700,
+    boxShadow: `0 0 0 3px ${colors.indigo100}`,
+  },
 });

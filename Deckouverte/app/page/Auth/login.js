@@ -11,6 +11,14 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { loginCreateur } from "../../fetch/Auth";
 import { useRouter } from "expo-router";
+import { buttonStyles } from "../../styles/buttons";
+
+import Svg, {
+  Text as SvgText,
+  Defs,
+  LinearGradient,
+  Stop,
+} from "react-native-svg";
 
 export function Login() {
   const router = useRouter();
@@ -44,7 +52,25 @@ export function Login() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.title}>Page Connexion</Text>
+        <Svg height="50" width="300" viewBox="0 0 300 50">
+          <Defs>
+            <LinearGradient id="gradient" x1="0" y1="0" x2="1" y2="0">
+              <Stop offset="0" stopColor="#6366f1" stopOpacity="1" />
+              <Stop offset="1" stopColor="#9333ea" stopOpacity="1" />
+            </LinearGradient>
+          </Defs>
+          <SvgText
+            fill="url(#gradient)"
+            fontSize="40"
+            fontWeight="800"
+            x="150"
+            y="40"
+            textAnchor="middle"
+          >
+            Connexion
+          </SvgText>
+        </Svg>
+
         <View style={styles.formSection}>
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Email</Text>
@@ -78,9 +104,11 @@ export function Login() {
 
           <Pressable
             style={({ pressed }) => [
-              styles.button,
-              loading && styles.buttonDisabled,
-              pressed && styles.buttonPressed,
+              buttonStyles.btn,
+              buttonStyles.btnFilled,
+              buttonStyles.btnText,
+              pressed && buttonStyles.btnFilledPressed,
+              loading && buttonStyles.buttonDisabled,
             ]}
             onPress={handleLogin}
             disabled={loading}
@@ -92,6 +120,7 @@ export function Login() {
             )}
           </Pressable>
         </View>
+
         <View style={styles.footerSection}>
           <Pressable
             onPress={() =>
@@ -123,22 +152,17 @@ export function Login() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f8f7ff',
+    backgroundColor: "#f8f7ff",
   },
   container: {
     flex: 1,
     padding: 20,
     justifyContent: "space-between",
     alignItems: "center",
+    fontFamily: "arial",
   },
   footerSection: {
     alignItems: "center",
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 45,
-    color: "#7C2EE0",
-    fontWeight: "bold",
     marginBottom: 20,
   },
   formSection: {
@@ -171,20 +195,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
   },
-  button: {
-    backgroundColor: "#5B3ADD",
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 16,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  buttonDisabled: {
-    backgroundColor: "#A8A8A8",
-  },
-  buttonPressed: {
-    opacity: 0.8,
-  },
+
   buttonText: {
     color: "#FFFFFF",
     fontSize: 18,

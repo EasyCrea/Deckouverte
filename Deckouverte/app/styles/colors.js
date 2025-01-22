@@ -6,7 +6,7 @@ export const colors = {
   indigo300: "#a5b4fc",
   indigo400: "#818cf8",
   indigo500: "#6366f1",
-  indigo600: "#4f46e5",
+  indigo600: "#5b3add",
   indigo700: "#4338ca",
   indigo800: "#3730a3",
   indigo900: "#312e81",

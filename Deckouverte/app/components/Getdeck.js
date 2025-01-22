@@ -10,7 +10,9 @@ import {
   FlatList,
   useWindowDimensions,
 } from "react-native";
+
 import { useRouter } from "expo-router";
+import { buttonStyles } from "../styles/buttons";
 import { getAllDecks } from "../fetch/Deck";
 import { validateToken, getAuthToken } from "../fetch/Auth";
 
@@ -99,21 +101,33 @@ export default function Getdeck() {
           </View>
 
           <Pressable
-            style={styles.detailsButton}
+            style={({ pressed }) => [
+              buttonStyles.btn,
+              buttonStyles.btnFilled,
+              pressed && buttonStyles.btnFilledPressed,
+            ]}
             onPress={() => router.push(`/page/details?id=${item.id_deck}`)}
           >
-            <Text style={styles.detailsButtonText}>Voir les détails →</Text>
+            <Text style={[styles.detailsButtonText, buttonStyles.btnText]}>
+              Voir les détails →
+            </Text>
           </Pressable>
           {connect && (
             <Pressable
-              style={styles.detailsButton2}
+              style={({ pressed }) => [
+                buttonStyles.btn,
+                buttonStyles.btnOutline,
+                pressed && buttonStyles.btnOutlinePressed,
+              ]}
               onPress={() =>
                 router.push(
                   `/page/historique?user_id=${idCreateur}&deck_id=${item.id_deck}`
                 )
               }
             >
-              <Text style={styles.detailsButtonText2}>Voir l'historique →</Text>
+              <Text style={[buttonStyles.btnText, buttonStyles.btnOutlineText]}>
+                Voir l'historique →
+              </Text>
             </Pressable>
           )}
         </View>
@@ -187,7 +201,7 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     position: "absolute",
-    right:0,
+    right: 0,
   },
   row: {
     flex: 1,
@@ -252,7 +266,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: "#5B3ADD",
+    backgroundColor: "#4f46e5",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -262,7 +276,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
   cardBadge: {
-    backgroundColor: "#5B3ADD",
+    backgroundColor: "#4f46e5",
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 12,
