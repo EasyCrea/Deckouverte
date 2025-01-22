@@ -139,7 +139,7 @@ export const buttonStyles = StyleSheet.create({
     paddingHorizontal: 16, // 1rem
     borderRadius: 8, // 0.5rem
     fontSize: 14, // 0.9rem
-    fontWeight: "700", // bold
+    fontWeight: "400", // bold
     textAlign: "center",
     cursor: "pointer",
     transition: `all ${colors.transitionSpeed}`, // Ajout d'une transition
