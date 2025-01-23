@@ -1,4 +1,11 @@
-import { Pressable, View, Text, StyleSheet, SafeAreaView } from "react-native";
+import {
+  Pressable,
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  Image,
+} from "react-native";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
@@ -9,6 +16,7 @@ import Svg, {
   LinearGradient,
   Stop,
 } from "react-native-svg";
+import logoEasyCrea from "./../assets/images/logo_easy_crea.png";
 
 export default function Index() {
   const router = useRouter();
@@ -24,6 +32,8 @@ export default function Index() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.headerSection}>
+          {/* Ajout du logo */}
+          <Image source={logoEasyCrea} style={styles.logo} />
           <Svg height="50" width="300" viewBox="0 0 300 50">
             <Defs>
               <LinearGradient id="gradient" x1="0" y1="0" x2="1" y2="0">
@@ -116,6 +126,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 40,
     fontFamily: "Arial",
+  },
+  logo: {
+    width: 100, // Largeur du logo
+    height: 100, // Hauteur du logo
+    marginBottom: 20, // Espacement entre le logo et le texte
   },
   buttonContainer: {
     alignItems: "center",

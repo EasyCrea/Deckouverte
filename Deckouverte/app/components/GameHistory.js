@@ -6,7 +6,9 @@ import {
   StyleSheet,
   Pressable,
 } from "react-native";
+import { Coins, Users, Trash2 } from "lucide-react";
 import { buttonStyles } from "../styles/buttons.js";
+import { colors } from "../styles/colors.js";
 import { RecupererHistorique, DeleteHistorique } from "../fetch/Historique";
 
 export default function GameHistory({ userId, deckId }) {
@@ -70,25 +72,42 @@ export default function GameHistory({ userId, deckId }) {
     <View style={styles.container}>
       {gameHistory.map((historyItem, index) => (
         <View key={index} style={styles.historyItem}>
-          <Text style={styles.textIndicator}>{index + 1}</Text>
-          <Text style={styles.text}>
-            {new Date(historyItem.game_date).toLocaleDateString("fr-FR", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            })}
-          </Text>
-          <Text style={styles.text}>{historyItem.turn_count} tours</Text>
-          <View style={styles.stats}>
-            <Text style={styles.statstext}>
-              <Text style={styles.statsBold}>Population finale: </Text>
-              <Text>{historyItem.final_people}</Text>
+          <View style={styles.headerContainer}>
+            <Text style={styles.textIndicator}>{index + 1}</Text>
+            <Text style={styles.dateText}>
+              {new Date(historyItem.game_date).toLocaleDateString("fr-FR", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })}
             </Text>
-            <Text style={styles.statstext}>
-              <Text style={styles.statsBold}>Trésorerie finale: </Text>
-              <Text>{historyItem.final_treasury}</Text>
-            </Text>
+            <Text style={styles.turnText}>{historyItem.turn_count} tours</Text>
           </View>
+
+          <View style={styles.statsContainer}>
+            <View style={styles.statItem}>
+              <View style={styles.indicatorsContainer}>
+                <Users size={20} color="black" />
+                <Text style={styles.statLabel}>Population finale</Text>
+              </View>
+              <View style={styles.scoreContainer}>
+                <Text style={styles.statValue}>{historyItem.final_people}</Text>
+              </View>
+            </View>
+
+            <View style={styles.statItem}>
+              <View style={styles.indicatorsContainer}>
+                <Coins size={20} color="black" />
+                <Text style={styles.statLabel}>Trésorerie finale</Text>
+              </View>
+              <View style={styles.scoreContainer}>
+                <Text style={styles.statValue}>
+                  {historyItem.final_treasury}
+                </Text>
+              </View>
+            </View>
+          </View>
+
           <Text
             style={[
               styles.textwin,
@@ -97,15 +116,20 @@ export default function GameHistory({ userId, deckId }) {
           >
             {historyItem.is_winner ? "Victoire" : "Défaite"}
           </Text>
+
           <Pressable
             style={({ pressed }) => [
-              styles.btn,
-              styles.btnDelete,
-              pressed && styles.btnPressed,
+              buttonStyles.btn,
+              buttonStyles.btnDelete,
+              styles.deleteButton,
+              pressed && buttonStyles.btnPressed,
             ]}
             onPress={() => Deletehistory(historyItem.id)}
           >
-            <Text style={styles.btnText}>Supprimer</Text>
+            <Trash2 size={20} color="#9825e2" style={styles.deleteIcon} />
+            <Text style={[buttonStyles.btnDeleteText, styles.deleteButtonText]}>
+              Supprimer
+            </Text>
           </Pressable>
         </View>
       ))}
@@ -117,81 +141,105 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     width: "100%",
+    backgroundColor: colors.gray50,
   },
   historyItem: {
+    backgroundColor: "white",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.indigo300,
+    shadowColor: colors.indigo300,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+    padding: 20,
+    marginBottom: 15,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 15,
-    padding: 20,
-    borderWidth: 1,
-    borderColor: "#5B3ADD",
-    borderRadius: 5,
-  },
-  text: {
-    fontSize: 16,
-    marginBottom: 5,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.gray200,
   },
   textIndicator: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
-    color: "#5B3ADD",
-    marginBottom: 5,
+    color: colors.purple600,
   },
-  stats: {
+  indicatorsContainer: {
     flexDirection: "row",
-    gap: 15,
+    alignItems: "center",
+    gap: 10,
   },
-  statstext: {
+  dateText: {
+    fontSize: 14,
+    color: colors.gray600,
+  },
+  turnText: {
+    fontSize: 14,
+    color: colors.gray600,
+  },
+  statsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 15,
+  },
+  statItem: {
+    flexDirection: "column",
+    alignItems: "center",
+    flex: 1,
+  },
+  statTextContainer: {
+    marginLeft: 10,
+  },
+  statLabel: {
+    fontSize: 14,
+    color: colors.gray700,
+    fontWeight: "600",
+  },
+  statValue: {
     fontSize: 16,
-    marginBottom: 5,
-  },
-  statsBold: {
+    color: colors.indigo700,
     fontWeight: "bold",
-  },
-  errorText: {
-    color: "red",
-    fontSize: 16,
-  },
-  emptyStateText: {
-    fontSize: 16,
-    color: "gray",
   },
   textwin: {
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 10,
+    textAlign: "center",
   },
   victoryText: {
-    color: "#4CAF50",
-  },
-  defeatText: {
-    color: "#F44336",
-  },
-  // Styles de bouton
-  btn: {
-    paddingVertical: 8,
+    color: colors.success,
+    backgroundColor: colors.successBackground,
+    paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
-    elevation: 2, // Pour Android
-    shadowColor: "#000", // Pour iOS
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  btnDelete: {
-    backgroundColor: "#FFF1F0", // Couleur de fond rose clair
-    borderWidth: 1,
-    borderColor: "#FF4D4F",
-  },
-  btnPressed: {
-    opacity: 0.7,
-  },
-  btnText: {
-    color: "#FF4D4F", // Rouge pour le texte du bouton supprimer
     fontSize: 14,
     fontWeight: "600",
+  },
+  defeatText: {
+    color: colors.danger,
+    backgroundColor: colors.dangerBackground,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  deleteButton: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 15,
+  },
+  deleteIcon: {
+    marginRight: 8,
+  },
+  deleteButtonText: {
     textAlign: "center",
   },
 });

@@ -21,6 +21,7 @@ import { useRouter } from "expo-router";
 import { buttonStyles } from "../styles/buttons";
 import { getAllDecks } from "../fetch/Deck";
 import { validateToken, getAuthToken } from "../fetch/Auth";
+import logoEasyCrea from "./../../assets/images/logo_easy_crea.png";
 
 export default function Getdeck() {
   const router = useRouter();
@@ -163,24 +164,27 @@ export default function Getdeck() {
 
   return (
     <View style={styles.container}>
-      <Svg height={80} width={width} style={styles.titleContainer}>
-        <Defs>
-          <LinearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <Stop offset="0%" stopColor="#6366f1" stopOpacity="1" />
-            <Stop offset="100%" stopColor="#9333ea" stopOpacity="1" />
-          </LinearGradient>
-        </Defs>
-        <SvgText
-          x="50%"
-          y="50%"
-          fill="url(#grad)"
-          fontSize="40"
-          fontWeight="bold"
-          textAnchor="middle"
-        >
-          Deckouverte
-        </SvgText>
-      </Svg>
+      <View style={styles.header}>
+        <Image source={logoEasyCrea} style={styles.logo} />
+        <Svg height={80} width="auto" style={styles.titleContainer}>
+          <Defs>
+            <LinearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <Stop offset="0%" stopColor="#6366f1" stopOpacity="1" />
+              <Stop offset="100%" stopColor="#9333ea" stopOpacity="1" />
+            </LinearGradient>
+          </Defs>
+          <SvgText
+            x="50%"
+            y="50%"
+            fill="url(#grad)"
+            fontSize="40"
+            fontWeight="bold"
+            textAnchor="middle"
+          >
+            Deckouverte
+          </SvgText>
+        </Svg>
+      </View>
       <View style={styles.btnBackbox}>
         <Pressable style={buttonStyles.btnBack} onPress={() => router.back()}>
           <FontAwesome name="arrow-left" size={18} color="#333333" />
@@ -236,6 +240,21 @@ const styles = StyleSheet.create({
     width: "80%",
     alignItems: "flex-start",
     marginBottom: 10,
+  },
+  header: {
+    flexDirection: "column", // Place les éléments sur une ligne
+    alignItems: "center", // Aligne verticalement les éléments au centre
+    justifyContent: "space-between", // Espace entre le logo et le titre
+    marginBottom: 20,
+  },
+  logo: {
+    width: 60,
+    height: 60,
+    resizeMode: "contain",
+    marginRight: 10,
+  },
+  titleContainer: {
+    flex: 1, // Permet au titre de prendre l'espace restant
   },
   row: {
     flex: 1,

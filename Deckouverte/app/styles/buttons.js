@@ -79,6 +79,7 @@ export const buttonStyles = StyleSheet.create({
   },
   btnDeleteText: {
     color: colors.pink,
+    fontWeight: "700",
   },
   btnDeletePressed: {
     backgroundColor: colors.pink100,
