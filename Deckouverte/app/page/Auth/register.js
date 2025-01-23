@@ -146,7 +146,6 @@ export function Register() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
-          <View style={styles.headerSection}>
             <View style={styles.title}>
               <Svg height="50" width="300" viewBox="0 0 300 50">
                 <Defs>
@@ -163,7 +162,7 @@ export function Register() {
                   y="40"
                   textAnchor="middle"
                 >
-                  Connexion
+                  Inscription
                 </SvgText>
               </Svg>
             </View>
@@ -175,7 +174,6 @@ export function Register() {
                 <FontAwesome name="arrow-left" size={18} color="#333333" />
               </Pressable>
             </View>
-          </View>
 
           <View style={styles.formSection}>
             <View style={styles.inputGroup}>
@@ -255,20 +253,22 @@ export function Register() {
             {error ? <Text style={styles.error}>{error}</Text> : null}
 
             <Pressable
-              style={({ pressed }) => [
-                styles.mainButton,
-                loading && styles.buttonDisabled,
-                pressed && styles.buttonPressed,
-              ]}
-              onPress={handleSubmit}
-              disabled={loading}
-            >
-              {loading ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <Text style={styles.mainButtonText}>S'inscrire</Text>
-              )}
-            </Pressable>
+                      style={({ pressed }) => [
+                        buttonStyles.btn,
+                        buttonStyles.btnFilled,
+                        buttonStyles.btnText,
+                        pressed && buttonStyles.btnFilledPressed,
+                        loading && buttonStyles.buttonDisabled,
+                      ]}
+                      onPress={handleSubmit}
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <ActivityIndicator color="#FFFFFF" />
+                      ) : (
+                        <Text style={styles.buttonText}>Se connecter</Text>
+                      )}
+                    </Pressable>
 
           </View>
       </ScrollView>
@@ -280,36 +280,28 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#f8f7ff",
+    fontFamily: "arial",
   },
-  scrollContainer: {
-    flexGrow: 1,
+  btnBackbox: {
+    width: "80%",
+    alignItems: "flex-start",
+    paddingLeft: 10,
   },
   container: {
     flex: 1,
     paddingHorizontal: 20,
   },
-  headerSection: {
-    alignItems: "center",
-    paddingTop: 40,
-    marginBottom: 30,
-  },
   formSection: {
     width: "100%",
     paddingHorizontal: 10,
     paddingBottom: 40,
+    paddingTop: 20,
   },
   title: {
     fontSize: 48,
     fontWeight: "700",
-    textAlign: "center",
-    color: "#7C2EE0",
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 16,
-    textAlign: "center",
-    letterSpacing: 0.5,
-    color: "#666666",
+    alignItems: "center",
+    marginBottom: 20,
   },
   inputGroup: {
     marginBottom: 20,
@@ -345,6 +337,7 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     width: "100%",
+    borderColor: colors.indigo200,
   },
   datePicker: {
     width: "100%",
@@ -356,21 +349,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
   },
-  mainButton: {
-    backgroundColor: "#5B3ADD",
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 16,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  mainButtonText: {
+  buttonText: {
     color: "#FFFFFF",
     fontSize: 18,
     fontWeight: "600",
     letterSpacing: 0.5,
-  },
-  buttonDisabled: {
-    backgroundColor: "#A8A8A8",
   },
 });

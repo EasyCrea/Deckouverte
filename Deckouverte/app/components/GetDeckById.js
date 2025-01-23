@@ -73,7 +73,9 @@ export default function GetDeckById({ deckId }) {
   return (
     <View style={styles.container}>
       <View style={styles.cardContainer}>
-        <Svg height="80" width="100%" viewBox="0 0 300 80">
+
+        
+        <Svg height="80" width="100%" viewBox="0 0 100% 80">
           <Defs>
             <LinearGradient id="gradient" x1="0" y1="0" x2="1" y2="0">
               <Stop offset="0" stopColor={colors.indigo500} stopOpacity="1" />
@@ -82,9 +84,9 @@ export default function GetDeckById({ deckId }) {
           </Defs>
           <SvgText
             fill="url(#gradient)"
-            fontSize="32"
+            fontSize="24"
             fontWeight="800"
-            x="150"
+            x="50%"  // Center horizontally
             y="50"
             textAnchor="middle"
           >
