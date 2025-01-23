@@ -22,7 +22,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { validateToken } from "../fetch/Auth";
 import { AjoutHistorique } from "../fetch/Historique";
 import { RecupererCartes } from "../fetch/Deck";
-
+import { Users, Coins } from "lucide-react";
 
 const { width, height } = Dimensions.get("window");
 
@@ -315,27 +315,51 @@ const ReignsGame = () => {
         </PanGestureHandler>
       ) : (
         <>
-          <View style={styles.scoreContainer}>
-            <Text style={styles.scoreText}>Cartes: {remainingCards}</Text>
-          </View>
+          <View style={styles.scoreHeader}>
+            <View style={styles.scoreContainer}>
+              <Text style={styles.scoreText}>Cartes: {remainingCards}</Text>
+            </View>
 
-          <View style={styles.indicators}>
-            {[
-              { key: "people", label: `Population: ${gameStates.people}` },
-              { key: "treasury", label: `Finances: ${gameStates.treasury}` },
-            ].map(({ key, label }) => (
-              <View key={key} style={styles.indicatorContainer}>
-                <Text style={styles.indicatorLabel}>{label}</Text>
-                <View style={styles.progressBarBackground}>
-                  <View
-                    style={[
-                      styles.progressBarForeground,
-                      { width: `${(gameStates[key] / 200) * 100}%` },
-                    ]}
-                  />
+            <View style={styles.indicators}>
+              {[
+                {
+                  key: "people",
+                  label: (
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <Users size={20} color="black" />
+                      <Text style={{ marginLeft: 5 }}>{gameStates.people}</Text>
+                    </View>
+                  ),
+                },
+                {
+                  key: "treasury",
+                  label: (
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <Coins size={20} color="black" />
+                      <Text style={{ marginLeft: 5 }}>
+                        {gameStates.treasury}
+                      </Text>
+                    </View>
+                  ),
+                },
+              ].map(({ key, label }) => (
+                <View key={key} style={styles.indicatorContainer}>
+                  <Text style={styles.indicatorLabel}>{label}</Text>
+                  <View style={styles.progressBarBackground}>
+                    <View
+                      style={[
+                        styles.progressBarForeground,
+                        { width: `${(gameStates[key] / 200) * 100}%` },
+                      ]}
+                    />
+                  </View>
                 </View>
-              </View>
-            ))}
+              ))}
+            </View>
           </View>
 
           <PanGestureHandler
@@ -444,27 +468,27 @@ const ReignsGame = () => {
               <Text style={styles.modalButtonText}>Quitter</Text>
             </TouchableOpacity>
             <TouchableOpacity
-  style={styles.modalButton}
-  onPress={() => {
-    // Réinitialiser les états du jeu
-    setIsVictory(false);
-    setIsGameOver(false);
-    setTurn(1);
-    setGameStates({ people: 10, treasury: 10 });
-    setCurrentCardIndex(0);
-    setRemainingCards(cards.length);
-    resetAnimationValues();
-    // Réinitialiser le jeu avec un petit délai
-    setTimeout(() => {
-      setGameStarted(false);  // D'abord mettre à false
-      setTimeout(() => {
-        setGameStarted(true); // Puis remettre à true pour "redémarrer"
-      }, 50);
-    }, 50);
-  }}
->
-  <Text style={styles.modalButtonText}>Recommencer</Text>
-</TouchableOpacity>
+              style={styles.modalButton}
+              onPress={() => {
+                // Réinitialiser les états du jeu
+                setIsVictory(false);
+                setIsGameOver(false);
+                setTurn(1);
+                setGameStates({ people: 10, treasury: 10 });
+                setCurrentCardIndex(0);
+                setRemainingCards(cards.length);
+                resetAnimationValues();
+                // Réinitialiser le jeu avec un petit délai
+                setTimeout(() => {
+                  setGameStarted(false); // D'abord mettre à false
+                  setTimeout(() => {
+                    setGameStarted(true); // Puis remettre à true pour "redémarrer"
+                  }, 50);
+                }, 50);
+              }}
+            >
+              <Text style={styles.modalButtonText}>Recommencer</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -476,7 +500,6 @@ const ReignsGame = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E6E6FA",
     justifyContent: "center",
     padding: 20,
   },
@@ -485,21 +508,34 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     marginBottom: 20,
   },
+  scoreHeader: {
+    borderRadius: 10,
+    marginBottom: 10,
+    backgroundColor: "white",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
+  },
   scoreText: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#333",
   },
   indicators: {
-    flexDirection: "column",
+    flexDirection: "row",
+    justifyContent: "space-around",
     marginBottom: 20,
   },
   indicatorContainer: {
     marginBottom: 15,
+    textAlign: "center",
+    width: "45%",
   },
   indicatorLabel: {
     fontSize: 16,
     fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 5,
     textTransform: "uppercase",
   },
