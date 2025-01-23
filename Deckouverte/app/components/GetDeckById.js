@@ -1,7 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
 import { useRouter } from "expo-router";
+import Svg, {
+  Text as SvgText,
+  Defs,
+  LinearGradient,
+  Stop,
+} from "react-native-svg";
+import { Heart, Calendar, TrendingUp } from "lucide-react";
 import API from "../fetch/API";
+import { colors } from "../styles/colors";
 
 export default function GetDeckById({ deckId }) {
   const router = useRouter();
@@ -28,12 +42,12 @@ export default function GetDeckById({ deckId }) {
     };
 
     fetchData();
-  }, []);
+  }, [deckId]);
 
   if (loading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color={colors.indigo500} />
       </View>
     );
   }
@@ -58,56 +72,132 @@ export default function GetDeckById({ deckId }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.Titre_deck}>{deck.deck.titre_deck}</Text>
-      <View style={styles.date}>
-        <Text style={styles.date_deck}>
-          Début :{" "}
-          {new Date(deck.deck.date_debut_deck).toLocaleDateString("fr-FR", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric",
-          })}
-        </Text>
-        <Text style={styles.date_deck}>
-          Fin :{" "}
-          {new Date(deck.deck.date_fin_deck).toLocaleDateString("fr-FR", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric",
-          })}
-        </Text>
+      <View style={styles.cardContainer}>
+        <Svg height="80" width="100%" viewBox="0 0 300 80">
+          <Defs>
+            <LinearGradient id="gradient" x1="0" y1="0" x2="1" y2="0">
+              <Stop offset="0" stopColor={colors.indigo500} stopOpacity="1" />
+              <Stop offset="1" stopColor={colors.purple500} stopOpacity="1" />
+            </LinearGradient>
+          </Defs>
+          <SvgText
+            fill="url(#gradient)"
+            fontSize="32"
+            fontWeight="800"
+            x="150"
+            y="50"
+            textAnchor="middle"
+          >
+            {deck.deck.titre_deck}
+          </SvgText>
+        </Svg>
+
+        <View style={styles.detailsContainer}>
+          <View style={styles.dateSection}>
+            <Calendar size={24} color={colors.gray600} />
+            <View>
+              <Text style={styles.dateSectionTitle}>Période</Text>
+              <Text style={styles.date_deck}>
+                Du{" "}
+                {new Date(deck.deck.date_debut_deck).toLocaleDateString(
+                  "fr-FR",
+                  {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  }
+                )}
+              </Text>
+              <Text style={styles.date_deck}>
+                Au{" "}
+                {new Date(deck.deck.date_fin_deck).toLocaleDateString("fr-FR", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.likeSection}>
+            <Heart size={24} color={colors.red500} />
+            <View>
+              <Text style={styles.likeSectionTitle}>Popularité</Text>
+              <Text style={styles.like_deck}>{deck.deck.nb_jaime} Likes</Text>
+            </View>
+          </View>
+        </View>
       </View>
-      <Text style={styles.like_deck}>Like : {deck.deck.nb_jaime}</Text>
     </View>
   );
 }
 
+const { width } = Dimensions.get("window");
+
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     alignItems: "center",
+    backgroundColor: colors.gray50,
+    paddingTop: 20,
+    fontFamily: "arial",
   },
-  Titre_deck: {
-    fontSize: 40,
-    fontWeight: "bold",
-    color: "#9333ea",
-    width: "100%",
-    textAlign: "center",
+  cardContainer: {
+    width: width * 0.9,
+    backgroundColor: "white",
+    borderRadius: 16,
+    shadowColor: colors.indigo300,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+    overflow: "hidden",
   },
-  date: {
-    marginTop: 10,
-    marginBottom: 10,
+  detailsContainer: {
     flexDirection: "row",
-    gap: 10,
     justifyContent: "space-around",
+    padding: 20,
+    borderTopWidth: 1,
+    borderTopColor: colors.gray200,
+  },
+  dateSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 15,
+  },
+  likeSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 15,
+  },
+  dateSectionTitle: {
+    fontSize: 14,
+    color: colors.gray700,
+    fontWeight: "600",
+  },
+  likeSectionTitle: {
+    fontSize: 14,
+    color: colors.gray700,
+    fontWeight: "600",
   },
   date_deck: {
-    fontSize: 14,
-    color: "#6B7280",
-    marginBottom: 2,
+    fontSize: 13,
+    color: colors.gray600,
     fontStyle: "italic",
   },
   like_deck: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "bold",
+    color: colors.red500,
+  },
+  errorText: {
+    color: colors.danger,
+    fontSize: 16,
+    textAlign: "center",
+  },
+  emptyStateText: {
+    fontSize: 16,
+    color: colors.gray500,
+    textAlign: "center",
   },
 });

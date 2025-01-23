@@ -8,8 +8,10 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import  GetDeckById  from "../components/GetDeckById";
-import  GetCardInDeck  from "../components/GetCardInDeck";
+import { FontAwesome } from "@expo/vector-icons";
+import { buttonStyles } from "../styles/buttons";
+import GetDeckById from "../components/GetDeckById";
+import GetCardInDeck from "../components/GetCardInDeck";
 import { Heart } from "lucide-react-native";
 import { AjoutLike, RecupererLike, DeleteLike } from "../fetch/Like";
 import { validateToken } from "../fetch/Auth";
@@ -32,7 +34,7 @@ export default function GameScreen() {
         setConnect(false);
         return;
       }
-      
+
       const id_createur = serverResponse.decoded.id;
       if (!liked) {
         await AjoutLike(id, id_createur);
@@ -74,8 +76,8 @@ export default function GameScreen() {
     <SafeAreaView style={styles.container}>
       <GetDeckById deckId={id} />
       {connect && (
-        <TouchableOpacity 
-          onPress={confirmLike} 
+        <TouchableOpacity
+          onPress={confirmLike}
           style={styles.likeContainer}
           disabled={loading}
         >
@@ -92,9 +94,14 @@ export default function GameScreen() {
       )}
 
       <GetCardInDeck deckId={id} />
-      <Pressable style={styles.button} onPress={() => router.back()}>
-        <Text style={styles.buttonText}>Retour à la page des decks</Text>
-      </Pressable>
+      <View style={styles.btnBackbox}>
+        <Pressable
+          style={[buttonStyles.btnBack, styles.button]}
+          onPress={() => router.back()}
+        >
+          <FontAwesome name="arrow-left" size={18} color="#333333" />
+        </Pressable>
+      </View>
       {error && <Text style={styles.errorText}>{error}</Text>}
     </SafeAreaView>
   );
@@ -107,14 +114,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    backgroundColor: "#5B3ADD",
     paddingVertical: 16,
     paddingHorizontal: 32,
     borderRadius: 16,
     marginBottom: 16,
     marginTop: 20,
-    width: "80%",
-    maxWidth: 300,
   },
   buttonText: {
     color: "white",
@@ -123,5 +127,8 @@ const styles = StyleSheet.create({
   },
   likeContainer: {
     marginTop: 20,
+  },
+  btnBackbox: {
+    width: "80%",
   },
 });
