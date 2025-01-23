@@ -14,7 +14,7 @@ export default function GetDeckById({ deckId }) {
     const fetchData = async () => {
       try {
         const response = await API.get(
-          `http://localhost:8000/createur/deck/${deckId}`
+          `/createur/deck/${deckId}`
         );
         const json = await response.data;
         setDeck(json);
@@ -78,6 +78,7 @@ export default function GetDeckById({ deckId }) {
         </Text>
       </View>
       <Text style={styles.like_deck}>Like : {deck.deck.nb_jaime}</Text>
+      <Text style={styles.description_deck}>{deck.deck.description}</Text>
     </View>
   );
 }
