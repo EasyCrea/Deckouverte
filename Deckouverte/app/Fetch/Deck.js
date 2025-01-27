@@ -41,13 +41,14 @@ export const RecupererCartes = async (id, gameStarted) => {
   };
 
   export const getParticipants = async (id) => {
-    try{
-      const response = await API.get(
-        `/createur/participants/${id}`
-      );
-      return response.data;
+    try {
+      const response = await fetch(`/createur/participants/${id}`);
+      console.log(response);
+      const data = await response.json(); 
+      console.log(data);
+      return data;
     } catch (error) {
-      console.error("Erreur lors de la récupération des decks:", error.message);
+      console.error("Erreur lors de la récupération des participants:", error.message);
       throw error;
     }
-    }
+  }
