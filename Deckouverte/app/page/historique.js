@@ -42,7 +42,7 @@ export default function HistoriqueScreen() {
             y="50%"
             fill="url(#grad)"
             fontSize="40"
-            fontWeight="bold"
+            fontWeight="800"
             textAnchor="middle"
           >
             Deckouverte
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   btnBackbox: {
-    width: "80%",
+    width: "90%",
     alignItems: "flex-start",
     marginBottom: 10,
   },

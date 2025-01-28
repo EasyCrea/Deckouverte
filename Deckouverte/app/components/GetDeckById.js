@@ -27,9 +27,7 @@ export default function GetDeckById({ deckId }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await API.get(
-          `/createur/deck/${deckId}`
-        );
+        const response = await API.get(`/createur/deck/${deckId}`);
         const json = await response.data;
         setDeck(json);
       } catch (error) {
@@ -73,8 +71,6 @@ export default function GetDeckById({ deckId }) {
   return (
     <View style={styles.container}>
       <View style={styles.cardContainer}>
-
-        
         <Svg height="80" width="100%" viewBox="0 0 100% 80">
           <Defs>
             <LinearGradient id="gradient" x1="0" y1="0" x2="1" y2="0">
@@ -86,7 +82,7 @@ export default function GetDeckById({ deckId }) {
             fill="url(#gradient)"
             fontSize="24"
             fontWeight="800"
-            x="50%"  // Center horizontally
+            x="50%" // Center horizontally
             y="50"
             textAnchor="middle"
           >
@@ -129,6 +125,10 @@ export default function GetDeckById({ deckId }) {
             </View>
           </View>
         </View>
+        <View style={styles.detailsDescription}>
+            <Text style={styles.descriptionTitle}>Description :</Text>
+            <Text style={styles.descriptionContent}>{deck.deck.description}</Text>
+        </View>
       </View>
     </View>
   );
@@ -138,7 +138,6 @@ const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
     backgroundColor: colors.gray50,
     paddingTop: 20,
@@ -154,6 +153,8 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 5,
     overflow: "hidden",
+    borderWidth: 1,
+    borderColor: colors.gray200,
   },
   detailsContainer: {
     flexDirection: "row",
@@ -162,6 +163,21 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.gray200,
   },
+  detailsDescription: {
+    padding: 20,
+    borderTopWidth: 1,
+    borderTopColor: colors.gray200,
+  },
+  descriptionTitle: {
+    fontSize: 18,
+    color: colors.indigo700,
+    fontWeight: "600",
+    marginBottom: 10,
+  },
+  descriptionContent: {
+    marginBottom: 20,
+  },
+
   dateSection: {
     flexDirection: "row",
     alignItems: "center",

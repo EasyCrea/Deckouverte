@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { getParticipants } from "../fetch/Deck";
+import { colors } from "../styles/colors";
 
 export default function GetCardInDeck({ deckId }) {
   const router = useRouter();
@@ -60,7 +61,7 @@ export default function GetCardInDeck({ deckId }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titre}>Créateur ayant participer aux decks :</Text>
+      <Text style={styles.titre}>Participants :</Text>
       <View style={styles.cards}>
       {cards.createurs.map((card, index) => (
         <View key={index} style={styles.card}>
@@ -73,9 +74,24 @@ export default function GetCardInDeck({ deckId }) {
 }
 
 const styles = StyleSheet.create({
+  container:{
+    width: "90%",
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: "white",
+    alignItems:"start",
+    shadowColor: colors.indigo300,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+    overflow: "hidden",
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.gray200,
+  },
   titre: {
     fontSize: 20,
-    marginVertical: 10,
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -85,14 +101,14 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   card: {
-    borderColor: "#5B3ADD",
+    borderColor: colors.indigo700,
     borderWidth: 2,
     padding: 20,
     margin: 5,
     borderRadius: 5,
   },
   cardText: {
-    color: "#5B3ADD",
+    color: colors.indigo700,
     fontWeight: "bold",
 
   },

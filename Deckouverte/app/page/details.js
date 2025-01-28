@@ -10,6 +10,7 @@ import {
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import { buttonStyles } from "../styles/buttons";
+import { colors } from "../styles/colors";
 import GetDeckById from "../components/GetDeckById";
 import GetCardInDeck from "../components/GetCardInDeck";
 import { Heart } from "lucide-react-native";
@@ -75,7 +76,10 @@ export default function GameScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <GetDeckById deckId={id} />
+      
+      <GetCardInDeck deckId={id} />
       {connect && (
+        <>
         <TouchableOpacity
           onPress={confirmLike}
           style={styles.likeContainer}
@@ -85,15 +89,18 @@ export default function GameScreen() {
             <ActivityIndicator size="small" color="#5B3ADD" />
           ) : (
             <Heart
-              color={liked ? "red" : "#5B3ADD"}
+              color={liked ? "red" : colors.indigo700}
               fill={liked ? "red" : "none"}
               size={30}
             />
           )}
+          {liked && 
+            <Text style={{fontSize: 15 }}>Vous avez liké le deck</Text>
+          }
         </TouchableOpacity>
-      )}
 
-      <GetCardInDeck deckId={id} />
+        </>
+      )}
       <View style={styles.btnBackbox}>
         <Pressable
           style={[buttonStyles.btnBack, styles.button]}
@@ -112,6 +119,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f8f7ff",
     alignItems: "center",
+    justifyContent: "space-between",
   },
   button: {
     paddingVertical: 16,
@@ -127,6 +135,7 @@ const styles = StyleSheet.create({
   },
   likeContainer: {
     marginTop: 20,
+    alignItems: "center",
   },
   btnBackbox: {
     width: "80%",

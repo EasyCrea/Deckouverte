@@ -98,7 +98,7 @@ export default function GameHistory({ userId, deckId }) {
             <View style={styles.statItem}>
               <View style={styles.indicatorsContainer}>
                 <Coins size={20} color="black" />
-                <Text style={styles.statLabel}>Trésorerie finale</Text>
+                <Text style={styles.statLabel}>Trésorerie  finale</Text>
               </View>
               <View style={styles.scoreContainer}>
                 <Text style={styles.statValue}>
@@ -191,6 +191,7 @@ const styles = StyleSheet.create({
   statItem: {
     flexDirection: "column",
     alignItems: "center",
+    justifyContent:"space-between",
     flex: 1,
   },
   statTextContainer: {

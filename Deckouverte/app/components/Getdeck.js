@@ -19,9 +19,11 @@ import Svg, {
 } from "react-native-svg";
 import { useRouter } from "expo-router";
 import { buttonStyles } from "../styles/buttons";
+import { colors } from "../styles/colors";
 import { getAllDecks } from "../fetch/Deck";
 import { validateToken, getAuthToken } from "../fetch/Auth";
 import logoEasyCrea from "./../../assets/images/logo_easy_crea.png";
+
 
 export default function Getdeck() {
   const router = useRouter();
@@ -35,6 +37,12 @@ export default function Getdeck() {
 
   const numColumns = Math.max(1, Math.floor(width / 320));
   const listKey = `list-${numColumns}`;
+
+  const cleanText = (text) =>
+    text
+      ?.normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,13 +68,17 @@ export default function Getdeck() {
   }, []);
 
   const filteredDecks = Array.isArray(deck?.decks)
-    ? deck.decks.filter((item) => item.live === 0)
+    ? deck.decks.filter(
+        (item) =>
+          item.live === 0 &&
+          cleanText(item.titre_deck).includes(cleanText(searchQuery))
+      )
     : [];
 
   const renderCard = useCallback(
     ({ item }) => (
       <Pressable
-        style={[styles.card, { width: width / numColumns - 20 }]}
+        style={[styles.card, { width: "100%" }]}
         onPress={() => router.push(`/page/jeu?id=${item.id_deck}`)}
       >
         <View style={styles.cardContent}>
@@ -186,7 +198,7 @@ export default function Getdeck() {
         </Svg>
       </View>
       <View style={styles.btnBackbox}>
-        <Pressable style={buttonStyles.btnBack} onPress={() => router.back()}>
+        <Pressable style={buttonStyles.btnBack} onPress={() => router.push("/")}>
           <FontAwesome name="arrow-left" size={18} color="#333333" />
         </Pressable>
       </View>
@@ -202,6 +214,7 @@ export default function Getdeck() {
         />
       </View>
       <FlatList
+
         key={listKey}
         data={filteredDecks}
         renderItem={renderCard}
@@ -214,11 +227,6 @@ export default function Getdeck() {
           <Text style={styles.emptyText}>Aucun deck trouvé</Text>
         }
       />
-      <View style={styles.footerSection}>
-        <Text style={styles.description}>
-          2025 © DeckOuverte. Tous droits réservés.
-        </Text>
-      </View>
     </View>
   );
 }
@@ -245,7 +253,6 @@ const styles = StyleSheet.create({
     flexDirection: "column", // Place les éléments sur une ligne
     alignItems: "center", // Aligne verticalement les éléments au centre
     justifyContent: "space-between", // Espace entre le logo et le titre
-    marginBottom: 20,
   },
   logo: {
     width: 60,
@@ -268,17 +275,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginVertical: 16,
   },
-  footerSection: {
-    paddingBottom: 40,
-  },
-  description: {
-    fontSize: 14,
-    fontStyle: "italic",
-    textAlign: "center",
-    lineHeight: 20,
-    color: "#666666",
-    paddingHorizontal: 10,
-  },
+ 
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -302,21 +299,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#1F2937",
     height: "100%",
-    borderWidth: 1,
-    borderColor: "#E5E7EB",
-    borderRadius: 8,
     paddingHorizontal: 8,
   },
   listContainer: {
     paddingVertical: 8,
+
   },
   buttonsContainer: {
     gap: 8,
   },
+
   card: {
     backgroundColor: "#FFFFFF",
     borderRadius: 16,
     marginBottom: 12,
+    border: "1px solid" ,
+    borderColor: colors.indigo200,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
