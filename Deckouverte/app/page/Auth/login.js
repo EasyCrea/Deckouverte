@@ -144,7 +144,8 @@ const styles = StyleSheet.create({
     fontFamily: "arial",
   },
   title: {
-    marginBottom: 80,
+    marginBottom: 40,
+    marginTop: 30,
   },
   btnBackbox: {
     marginBottom: 20,

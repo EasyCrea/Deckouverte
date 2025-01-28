@@ -302,6 +302,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     alignItems: "center",
     marginBottom: 20,
+    marginTop: 30,
   },
   inputGroup: {
     marginBottom: 20,

@@ -178,7 +178,7 @@ export default function Getdeck() {
             y="50%"
             fill="url(#grad)"
             fontSize="40"
-            fontWeight="bold"
+            fontWeight="800"
             textAnchor="middle"
           >
             Deckouverte
