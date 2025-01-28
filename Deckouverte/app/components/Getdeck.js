@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { FontAwesome } from "@expo/vector-icons";
 import {
   View,
   Text,
@@ -10,9 +11,17 @@ import {
   FlatList,
   useWindowDimensions,
 } from "react-native";
+import Svg, {
+  Text as SvgText,
+  Defs,
+  LinearGradient,
+  Stop,
+} from "react-native-svg";
 import { useRouter } from "expo-router";
+import { buttonStyles } from "../styles/buttons";
 import { getAllDecks } from "../fetch/Deck";
 import { validateToken, getAuthToken } from "../fetch/Auth";
+import logoEasyCrea from "./../../assets/images/logo_easy_crea.png";
 
 export default function Getdeck() {
   const router = useRouter();
@@ -24,7 +33,6 @@ export default function Getdeck() {
   const [idCreateur, setIdCreateur] = useState(null);
   const [connect, setConnect] = useState(false);
 
-  // Calculer le nombre de colonnes en fonction de la largeur de l'écran
   const numColumns = Math.max(1, Math.floor(width / 320));
   const listKey = `list-${numColumns}`;
 
@@ -35,11 +43,10 @@ export default function Getdeck() {
         if (tokenexist) {
           const serverResponse = await validateToken();
           const id_createur = serverResponse.decoded.id;
-          setIdCreateur(id_createur); // Stocker l'id_createur dans un état
+          setIdCreateur(id_createur);
           setConnect(true);
         }
         const response = await getAllDecks();
-        console.log(response);
         setDeck(response.data);
       } catch (error) {
         setError({
@@ -56,7 +63,6 @@ export default function Getdeck() {
     ? deck.decks.filter((item) => item.live === 0)
     : [];
 
-  // Memoize renderCard pour optimiser les performances
   const renderCard = useCallback(
     ({ item }) => (
       <Pressable
@@ -81,7 +87,7 @@ export default function Getdeck() {
 
           <View style={styles.dateContainer}>
             <Text style={styles.dateText}>
-              Ouvert Du{" "}
+              Créer Du{" "}
               {new Date(item.date_debut_deck).toLocaleDateString("fr-FR", {
                 day: "2-digit",
                 month: "long",
@@ -98,28 +104,44 @@ export default function Getdeck() {
             </Text>
           </View>
 
-          <Pressable
-            style={styles.detailsButton}
-            onPress={() => router.push(`/page/details?id=${item.id_deck}`)}
-          >
-            <Text style={styles.detailsButtonText}>Voir les détails →</Text>
-          </Pressable>
-          {connect && (
+          <View style={styles.buttonsContainer}>
             <Pressable
-              style={styles.detailsButton2}
-              onPress={() =>
-                router.push(
-                  `/page/historique?user_id=${idCreateur}&deck_id=${item.id_deck}`
-                )
-              }
+              style={({ pressed }) => [
+                buttonStyles.btn,
+                buttonStyles.btnFilled,
+                pressed && buttonStyles.btnFilledPressed,
+              ]}
+              onPress={() => router.push(`/page/details?id=${item.id_deck}`)}
             >
-              <Text style={styles.detailsButtonText2}>Voir l'historique →</Text>
+              <Text style={[buttonStyles.btnText, buttonStyles.btnFilledText]}>
+                Voir les détails →
+              </Text>
             </Pressable>
-          )}
+            {connect && (
+              <Pressable
+                style={({ pressed }) => [
+                  buttonStyles.btn,
+                  buttonStyles.btnOutline,
+                  pressed && buttonStyles.btnOutlinePressed,
+                ]}
+                onPress={() =>
+                  router.push(
+                    `/page/historique?user_id=${idCreateur}&deck_id=${item.id_deck}`
+                  )
+                }
+              >
+                <Text
+                  style={[buttonStyles.btnText, buttonStyles.btnOutlineText]}
+                >
+                  Voir l'historique →
+                </Text>
+              </Pressable>
+            )}
+          </View>
         </View>
       </Pressable>
     ),
-    [numColumns, width, idCreateur] // Inclure idCreateur dans les dépendances
+    [numColumns, width, idCreateur]
   );
 
   if (loading) {
@@ -142,13 +164,32 @@ export default function Getdeck() {
 
   return (
     <View style={styles.container}>
-      <Pressable style={styles.button} onPress={() => router.push("/")}>
-        <Image
-          source={require("./../../assets/images/porte.png")}
-          style={styles.buttonIcon}
-        />
-      </Pressable>
-      <Text style={styles.title}>Deckouverte</Text>
+      <View style={styles.header}>
+        <Image source={logoEasyCrea} style={styles.logo} />
+        <Svg height={80} width="auto" style={styles.titleContainer}>
+          <Defs>
+            <LinearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <Stop offset="0%" stopColor="#6366f1" stopOpacity="1" />
+              <Stop offset="100%" stopColor="#9333ea" stopOpacity="1" />
+            </LinearGradient>
+          </Defs>
+          <SvgText
+            x="50%"
+            y="50%"
+            fill="url(#grad)"
+            fontSize="40"
+            fontWeight="800"
+            textAnchor="middle"
+          >
+            Deckouverte
+          </SvgText>
+        </Svg>
+      </View>
+      <View style={styles.btnBackbox}>
+        <Pressable style={buttonStyles.btnBack} onPress={() => router.back()}>
+          <FontAwesome name="arrow-left" size={18} color="#333333" />
+        </Pressable>
+      </View>
 
       <View style={styles.searchContainer}>
         <Text style={styles.searchIcon}>🔍</Text>
@@ -173,6 +214,11 @@ export default function Getdeck() {
           <Text style={styles.emptyText}>Aucun deck trouvé</Text>
         }
       />
+      <View style={styles.footerSection}>
+        <Text style={styles.description}>
+          2025 © DeckOuverte. Tous droits réservés.
+        </Text>
+      </View>
     </View>
   );
 }
@@ -182,12 +228,33 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f8f7ff",
     padding: 12,
+    fontFamily: "arial",
   },
   buttonIcon: {
     width: 34,
     height: 34,
     position: "absolute",
-    right:0,
+    right: 0,
+  },
+  btnBackbox: {
+    width: "80%",
+    alignItems: "flex-start",
+    marginBottom: 10,
+  },
+  header: {
+    flexDirection: "column", // Place les éléments sur une ligne
+    alignItems: "center", // Aligne verticalement les éléments au centre
+    justifyContent: "space-between", // Espace entre le logo et le titre
+    marginBottom: 20,
+  },
+  logo: {
+    width: 60,
+    height: 60,
+    resizeMode: "contain",
+    marginRight: 10,
+  },
+  titleContainer: {
+    flex: 1, // Permet au titre de prendre l'espace restant
   },
   row: {
     flex: 1,
@@ -200,6 +267,17 @@ const styles = StyleSheet.create({
     color: "#9333ea",
     textAlign: "center",
     marginVertical: 16,
+  },
+  footerSection: {
+    paddingBottom: 40,
+  },
+  description: {
+    fontSize: 14,
+    fontStyle: "italic",
+    textAlign: "center",
+    lineHeight: 20,
+    color: "#666666",
+    paddingHorizontal: 10,
   },
   searchContainer: {
     flexDirection: "row",
@@ -224,9 +302,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#1F2937",
     height: "100%",
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    borderRadius: 8,
+    paddingHorizontal: 8,
   },
   listContainer: {
     paddingVertical: 8,
+  },
+  buttonsContainer: {
+    gap: 8,
   },
   card: {
     backgroundColor: "#FFFFFF",
@@ -234,7 +319,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.3,
     shadowRadius: 3,
     elevation: 3,
   },
@@ -252,7 +337,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: "#5B3ADD",
+    backgroundColor: "#5b3add",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -262,7 +347,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
   cardBadge: {
-    backgroundColor: "#5B3ADD",
+    backgroundColor: "#5b3add",
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 12,

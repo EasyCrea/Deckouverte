@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, Pressable, StyleSheet, Modal } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import CardSwipe from './../components/Getcard';
-import { AntDesign } from '@expo/vector-icons';
+import React, { useState } from "react";
+import { View, Text, Pressable, StyleSheet, Modal, Image } from "react-native";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import CardSwipe from "./../components/Getcard";
+import { AntDesign } from "@expo/vector-icons";
+import logoEasyCrea from "./../../assets/images/logo_easy_crea.png";
 
 export default function GameScreen() {
   const { id } = useLocalSearchParams();
@@ -11,26 +12,33 @@ export default function GameScreen() {
 
   return (
     <View style={styles.container}>
-       <Text style={styles.title}>LOGO</Text>
+      <Image source={logoEasyCrea} style={styles.logo} />
 
       <View style={styles.buttonsContainer}>
-        <Pressable 
-          style={styles.button} 
-          onPress={() => router.back()}
-        >
-          <AntDesign name="arrowleft" size={20} color="white" style={styles.buttonIcon} />
+        <Pressable style={styles.button} onPress={() => router.back()}>
+          <AntDesign
+            name="arrowleft"
+            size={20}
+            color="white"
+            style={styles.buttonIcon}
+          />
           <Text style={styles.buttonText}>Retour</Text>
         </Pressable>
 
-        <Pressable 
-          style={styles.button} 
+        <Pressable
+          style={styles.button}
           onPress={() => setIsRulesVisible(true)}
         >
-          <AntDesign name="infocirlceo" size={20} color="white" style={styles.buttonIcon} />
+          <AntDesign
+            name="infocirlceo"
+            size={20}
+            color="white"
+            style={styles.buttonIcon}
+          />
           <Text style={styles.buttonText}>Règles</Text>
         </Pressable>
       </View>
-      
+
       <CardSwipe deckId={id} />
 
       {/* Modal pour afficher les règles */}
@@ -44,15 +52,17 @@ export default function GameScreen() {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Règles du Jeu</Text>
             <Text style={styles.modalText}>
-              Pour gagner, vous devez maintenir l'équilibre entre la population et les finances. 
-              Si l'un des paramètres (population ou finances) descend à zéro ou devient double de l'autre, le jeu se termine.
+              Pour gagner, vous devez maintenir l'équilibre entre la population
+              et les finances. Si l'un des paramètres (population ou finances)
+              descend à zéro ou devient double de l'autre, le jeu se termine.
             </Text>
             <Text style={styles.modalText}>
-              Vous devrez choisir entre différentes décisions à chaque tour. 
-              Faites attention aux impacts de chaque choix sur la population et les finances.
+              Vous devrez choisir entre différentes décisions à chaque tour.
+              Faites attention aux impacts de chaque choix sur la population et
+              les finances.
             </Text>
-            <Pressable 
-              style={styles.modalButton} 
+            <Pressable
+              style={styles.modalButton}
               onPress={() => setIsRulesVisible(false)}
             >
               <Text style={styles.modalButtonText}>Fermer</Text>
@@ -67,26 +77,26 @@ export default function GameScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-    marginTop:20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f8f7ff",
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  logo: {
+    width: 100,
+    height: 100,
+    resizeMode: "contain",
     marginBottom: 20,
   },
   buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
     paddingHorizontal: 20,
   },
   button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#5B3ADD',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#5B3ADD",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -96,41 +106,41 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    width: '80%',
-    backgroundColor: 'white',
+    width: "80%",
+    backgroundColor: "white",
     borderRadius: 10,
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   modalTitle: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 15,
   },
   modalText: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 20,
   },
   modalButton: {
-    backgroundColor: '#5B3ADD',
+    backgroundColor: "#5B3ADD",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
   },
   modalButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
   },
 });

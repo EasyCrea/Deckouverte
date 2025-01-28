@@ -3,15 +3,18 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-, "app/index.js", "app/fetch/Getdeck.js", "app/_layout.js", "app/page/Auth/userconnexion.js", "app/page/Auth/userconnexion.js"  ]
+    "expo-env.d.ts",
+    "app/index.js",
+    "app/fetch/Getdeck.js",
+    "app/_layout.js",
+    "app/page/Auth/userconnexion.js",
+    "app/page/Auth/userconnexion.js"
+  ]
 }

@@ -14,7 +14,15 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
 import { registerCreateur } from "../../fetch/Auth";
 import { Picker } from "@react-native-picker/picker";
-
+import { FontAwesome } from '@expo/vector-icons';
+import { buttonStyles } from "../../styles/buttons";
+import { colors } from "../../styles/colors";
+import Svg, {
+  Text as SvgText,
+  Defs,
+  LinearGradient,
+  Stop,
+} from "react-native-svg";
 export function Register() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -137,11 +145,35 @@ export function Register() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.container}>
-          <View style={styles.headerSection}>
-            <Text style={styles.title}>Inscription</Text>
-          </View>
+      <ScrollView contentContainerStyle={styles.container}>
+            <View style={styles.title}>
+              <Svg height="50" width="300" viewBox="0 0 300 50">
+                <Defs>
+                  <LinearGradient id="gradient" x1="0" y1="0" x2="1" y2="0">
+                    <Stop offset="0" stopColor="#6366f1" stopOpacity="1" />
+                    <Stop offset="1" stopColor="#9333ea" stopOpacity="1" />
+                  </LinearGradient>
+                </Defs>
+                <SvgText
+                  fill="url(#gradient)"
+                  fontSize="40"
+                  fontWeight="800"
+                  x="150"
+                  y="40"
+                  textAnchor="middle"
+                >
+                  Inscription
+                </SvgText>
+              </Svg>
+            </View>
+            <View style={styles.btnBackbox}>
+              <Pressable
+                style={buttonStyles.btnBack}
+                onPress={() => router.back()}
+              >
+                <FontAwesome name="arrow-left" size={18} color="#333333" />
+              </Pressable>
+            </View>
 
           <View style={styles.formSection}>
             <View style={styles.inputGroup}>
@@ -221,37 +253,24 @@ export function Register() {
             {error ? <Text style={styles.error}>{error}</Text> : null}
 
             <Pressable
-              style={({ pressed }) => [
-                styles.mainButton,
-                loading && styles.buttonDisabled,
-                pressed && styles.buttonPressed,
-              ]}
-              onPress={handleSubmit}
-              disabled={loading}
-            >
-              {loading ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <Text style={styles.mainButtonText}>S'inscrire</Text>
-              )}
-            </Pressable>
+                      style={({ pressed }) => [
+                        buttonStyles.btn,
+                        buttonStyles.btnFilled,
+                        buttonStyles.btnText,
+                        pressed && buttonStyles.btnFilledPressed,
+                        loading && buttonStyles.buttonDisabled,
+                      ]}
+                      onPress={handleSubmit}
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <ActivityIndicator color="#FFFFFF" />
+                      ) : (
+                        <Text style={styles.buttonText}>Se connecter</Text>
+                      )}
+                    </Pressable>
 
-            <Pressable
-              style={styles.button}
-              onPress={() =>
-                router.push("/page/Auth/userconnexion?page=connexion")
-              }
-            >
-              <Text style={{ color: "blue",  fontStyle: 'italic' }}>Se connecter</Text>
-            </Pressable>
-
-            <Pressable
-            style={styles.button}
-             onPress={() => router.push("/")}>
-              <Text style={{ color: "blue",  fontStyle: 'italic' }}>Retour</Text>
-            </Pressable>
           </View>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -260,37 +279,30 @@ export function Register() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f8f7ff',
+    backgroundColor: "#f8f7ff",
+    fontFamily: "arial",
   },
-  scrollContainer: {
-    flexGrow: 1,
+  btnBackbox: {
+    width: "80%",
+    alignItems: "flex-start",
+    paddingLeft: 10,
   },
   container: {
     flex: 1,
     paddingHorizontal: 20,
   },
-  headerSection: {
-    alignItems: "center",
-    paddingTop: 40,
-    marginBottom: 30,
-  },
   formSection: {
     width: "100%",
     paddingHorizontal: 10,
     paddingBottom: 40,
+    paddingTop: 20,
   },
   title: {
     fontSize: 48,
     fontWeight: "700",
-    textAlign: "center",
-    color: "#7C2EE0",
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 16,
-    textAlign: "center",
-    letterSpacing: 0.5,
-    color: "#666666",
+    alignItems: "center",
+    marginBottom: 20,
+    marginTop: 30,
   },
   inputGroup: {
     marginBottom: 20,
@@ -299,7 +311,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 8,
-    color: "#333333",
+    color: colors.indigo700,
     paddingLeft: 4,
   },
   input: {
@@ -310,7 +322,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#333333",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: colors.indigo200,
   },
   inputText: {
     fontSize: 16,
@@ -320,12 +332,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: colors.indigo200,
     overflow: "hidden",
   },
   picker: {
     height: 50,
     width: "100%",
+    borderColor: colors.indigo200,
   },
   datePicker: {
     width: "100%",
@@ -337,29 +350,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
   },
-  mainButton: {
-    backgroundColor: "#5B3ADD",
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 16,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  mainButtonText: {
+  buttonText: {
     color: "#FFFFFF",
     fontSize: 18,
     fontWeight: "600",
     letterSpacing: 0.5,
   },
-  buttonPressed: {
-    opacity: 0.8,
-  },
-  buttonDisabled: {
-    backgroundColor: "#A8A8A8",
-  },
-  button:{
-    marginTop: 10,
-    alignItems: 'center',
-  }
-
 });
