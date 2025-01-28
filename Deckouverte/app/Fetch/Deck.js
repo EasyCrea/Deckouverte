@@ -52,7 +52,6 @@ export const RecupererCartes = async (id, gameStarted) => {
       // Extraire les données JSON
       const data = await response.json();
       return data;
-      
     } catch (error) {
       console.error("Erreur lors de la récupération des participants:", error.message);
       throw error;
