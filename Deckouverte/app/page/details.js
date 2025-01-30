@@ -15,7 +15,7 @@ import GetDeckById from "../components/GetDeckById";
 import GetCardInDeck from "../components/GetCardInDeck";
 import { Heart } from "lucide-react-native";
 import LikeService from "../fetch/Like";
-import authService from "../fetch/Auth";
+import AuthService from "../fetch/Auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function GameScreen() {
@@ -30,7 +30,7 @@ export default function GameScreen() {
     setLoading(true);
     setError(null);
     try {
-      const serverResponse = await authService.validateToken();
+      const serverResponse = await AuthService.validateToken();
       if (!serverResponse) {
         setConnect(false);
         return;
@@ -54,7 +54,7 @@ export default function GameScreen() {
 
   const checkConnectionAndLike = async () => {
     try {
-      const serverResponse = await authService.validateToken();
+      const serverResponse = await AuthService.validateToken();
       if (serverResponse) {
         setConnect(true);
         const id_createur = serverResponse.decoded.id;

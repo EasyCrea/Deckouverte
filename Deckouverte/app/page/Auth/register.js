@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
-import authService from "../../fetch/Auth";
+import AuthService from "../../fetch/Auth";
 import { Picker } from "@react-native-picker/picker";
 import { FontAwesome } from '@expo/vector-icons';
 import  buttonStyles  from "../../styles/buttons";
@@ -61,7 +61,7 @@ export default function Register() {
         ddn: formattedDate,
       };
 
-      await authService.registerCreateur(data);
+      await AuthService.registerCreateur(data);
       router.push("/page/Auth/userconnexion?page=connexion");
     } catch (err) {
       setError(err.response?.data?.message || "Erreur lors de l'inscription.");

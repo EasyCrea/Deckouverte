@@ -19,7 +19,7 @@ import Animated, {
   runOnJS,
 } from "react-native-reanimated";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import authService from "./../fetch/Auth";
+import AuthService from "./../fetch/Auth";
 import HistoriqueService from "../fetch/Historique";
 import DeckService  from "../fetch/Deck";
 import { Users, Coins } from "lucide-react";
@@ -59,7 +59,7 @@ const ReignsGame = () => {
   useEffect(() => {
     const getUserId = async () => {
       try {
-        const serverResponse = await authService.validateToken();
+        const serverResponse = await AuthService.validateToken();
         if (serverResponse) {
           const id_createur = serverResponse.decoded.id;
           setUserId(id_createur);

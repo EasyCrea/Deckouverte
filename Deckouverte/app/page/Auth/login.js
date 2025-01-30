@@ -9,7 +9,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import authService from "../../fetch/Auth";
+import AuthService from "../../fetch/Auth";
 import { useRouter } from "expo-router";
 import  buttonStyles  from "../../styles/buttons";
 import { FontAwesome } from '@expo/vector-icons';
@@ -39,7 +39,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const data = await authService.loginCreateur(email, password);
+      const data = await AuthService.loginCreateur(email, password);
       await AsyncStorage.setItem("token", data.token);
       console.log("Connecté avec succès !");
       router.push("/page/home");

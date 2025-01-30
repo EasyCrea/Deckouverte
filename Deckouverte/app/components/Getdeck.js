@@ -21,7 +21,7 @@ import { useRouter } from "expo-router";
 import  buttonStyles  from "../styles/buttons";
 import  colors  from "../styles/colors";
 import DeckService from "../fetch/Deck";
-import authService  from "../fetch/Auth";
+import AuthService  from "../fetch/Auth";
 import logoEasyCrea from "./../../assets/images/logo_easy_crea.png";
 
 
@@ -47,9 +47,9 @@ export default function Getdeck() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const tokenexist = await authService.getAuthToken();
+        const tokenexist = await AuthService.getAuthToken();
         if (tokenexist) {
-          const serverResponse = await authService.validateToken();
+          const serverResponse = await AuthService.validateToken();
           const id_createur = serverResponse.decoded.id;
           setIdCreateur(id_createur);
           setConnect(true);

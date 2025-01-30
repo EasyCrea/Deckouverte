@@ -50,7 +50,7 @@ export const logoutCreateur = async () => {
   return response.data;
 };
 
-const authService = {
+const AuthService = {
   getAuthToken,
   loginCreateur,
   registerCreateur,
@@ -58,4 +58,4 @@ const authService = {
   logoutCreateur,
 };
 
-export default authService;
+export default AuthService;
