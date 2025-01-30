@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Pressable,
 } from "react-native";
-import { Coins, Users, Trash2 } from "lucide-react";
+import { Coins, Users, Trash2 } from "lucide-react-native";
 import  buttonStyles  from "../styles/buttons.js";
 import  colors  from "../styles/colors.js";
 import HistoriqueService from "../fetch/Historique";

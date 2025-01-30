@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   container: {
-    flex: 1,
+    flexGrow: 1,
     paddingHorizontal: 20,
   },
   formSection: {

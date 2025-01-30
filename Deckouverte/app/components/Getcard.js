@@ -22,7 +22,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import AuthService from "./../fetch/Auth";
 import HistoriqueService from "../fetch/Historique";
 import DeckService  from "../fetch/Deck";
-import { Users, Coins } from "lucide-react";
+import { Users, Coins } from "lucide-react-native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -45,6 +45,7 @@ const ReignsGame = () => {
   const cardOpacity = useSharedValue(1);
   const [userId, setUserId] = useState(null);
   const [connexion, setConnexion] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
   const resetAnimationValues = () => {
@@ -65,7 +66,7 @@ const ReignsGame = () => {
           setUserId(id_createur);
           setConnexion(true);
         } else {
-          console.error("Aucun utilisateur trouvé.");
+          console.log("Aucun utilisateur trouvé.");
         }
       } catch (error) {
         console.error("Erreur lors de la récupération du jeton :", error);

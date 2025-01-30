@@ -3,7 +3,7 @@ import API from "./API";
 export const RecupererCartes = async (id, gameStarted) => {
   try {
     if (!gameStarted || !id) {
-      throw new Error("Jeu non commencé ou identifiant invalide");
+      console.log("Jeu non commencé ou identifiant invalide");
     }
 
     const response = await API.get(`/createur/deckCard/${id}`);

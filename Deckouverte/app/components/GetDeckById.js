@@ -13,7 +13,7 @@ import Svg, {
   LinearGradient,
   Stop,
 } from "react-native-svg";
-import { Heart, Calendar, TrendingUp } from "lucide-react";
+import { Heart } from "lucide-react-native";
 import API from "../fetch/API";
 import  colors  from "../styles/colors";
 
@@ -71,28 +71,28 @@ export default function GetDeckById({ deckId }) {
   return (
     <View style={styles.container}>
       <View style={styles.cardContainer}>
-        <Svg height="80" width="100%" viewBox="0 0 300 80">
-          <Defs>
-            <LinearGradient id="gradient" x1="0" y1="0" x2="1" y2="0">
-              <Stop offset="0" stopColor={colors.indigo500} stopOpacity="1" />
-              <Stop offset="1" stopColor={colors.purple500} stopOpacity="1" />
-            </LinearGradient>
-          </Defs>
-          <SvgText
-            fill="url(#gradient)"
-            fontSize="24"
-            fontWeight="800"
-            x="50%" // Center horizontally
-            y="50"
-            textAnchor="middle"
-          >
-            {deck.deck.titre_deck}
-          </SvgText>
-        </Svg>
+      <Svg height={80} width="333" style={styles.titleContainer}>
+                <Defs>
+                  <LinearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <Stop offset="0%" stopColor="#6366f1" stopOpacity="1" />
+                    <Stop offset="100%" stopColor="#9333ea" stopOpacity="1" />
+                  </LinearGradient>
+                </Defs>
+                <SvgText
+                  x="50%"
+                  y="50%"
+                  fill="url(#grad)"
+                  fontSize="23"
+                  fontWeight="800"
+                  textAnchor="middle"
+                  alignmentBaseline="middle"
+                >
+                  {deck.deck.titre_deck}
+                </SvgText>
+              </Svg>
 
         <View style={styles.detailsContainer}>
           <View style={styles.dateSection}>
-            <Calendar size={24} color={colors.gray600} />
             <View>
               <Text style={styles.dateSectionTitle}>Période</Text>
               <Text style={styles.date_deck}>
@@ -217,5 +217,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.gray500,
     textAlign: "center",
+  },
+  titleContainer: {
+    flex: 1, // Permet au titre de prendre l'espace restant
   },
 });

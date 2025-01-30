@@ -39,8 +39,7 @@ export const validateToken = async () => {
     const response = await API.get("/authorization/checkToken");
     return response.data;
   } catch (error) {
-    console.error("Erreur lors de la validation du token :", error.message);
-    throw error;
+    console.log("Erreur lors de la validation du token :", error.message);
   }
 };
 
