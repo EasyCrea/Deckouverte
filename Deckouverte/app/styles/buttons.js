@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
-import { colors } from "./colors";
+import  colors  from "./colors";
 
-export const buttonStyles = StyleSheet.create({
+const buttonStyles = StyleSheet.create({
   btn: {
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -145,12 +145,6 @@ export const buttonStyles = StyleSheet.create({
     cursor: "pointer",
     transition: `all ${colors.transitionSpeed}`, // Ajout d'une transition
   },
-  btnBackHover: {
-    backgroundColor: colors.pinkBackgroundHover,
-  },
-  btnBackFocus: {
-    borderWidth: 1,
-    borderColor: colors.indigo700,
-    boxShadow: `0 0 0 3px ${colors.indigo100}`,
-  },
 });
+
+export default buttonStyles;

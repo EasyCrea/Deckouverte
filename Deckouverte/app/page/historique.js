@@ -15,13 +15,15 @@ import Svg, {
   LinearGradient,
   Stop,
 } from "react-native-svg";
-import { buttonStyles } from "../styles/buttons";
+import  buttonStyles from "../styles/buttons";
 import logoEasyCrea from "./../../assets/images/logo_easy_crea.png";
 import { useLocalSearchParams } from "expo-router";
 import GameHistory from "../components/GameHistory";
 import { useRouter } from "expo-router";
+import Secure from "../fetch/Secure";
 
 export default function HistoriqueScreen() {
+  Secure();
   const router = useRouter();
 
   const { user_id, deck_id } = useLocalSearchParams();

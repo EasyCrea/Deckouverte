@@ -19,9 +19,9 @@ import Animated, {
   runOnJS,
 } from "react-native-reanimated";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { validateToken } from "../fetch/Auth";
-import { AjoutHistorique } from "../fetch/Historique";
-import { RecupererCartes } from "../fetch/Deck";
+import authService from "./../fetch/Auth";
+import HistoriqueService from "../fetch/Historique";
+import DeckService  from "../fetch/Deck";
 import { Users, Coins } from "lucide-react";
 
 const { width, height } = Dimensions.get("window");
@@ -59,7 +59,7 @@ const ReignsGame = () => {
   useEffect(() => {
     const getUserId = async () => {
       try {
-        const serverResponse = await validateToken();
+        const serverResponse = await authService.validateToken();
         if (serverResponse) {
           const id_createur = serverResponse.decoded.id;
           setUserId(id_createur);
@@ -77,7 +77,7 @@ const ReignsGame = () => {
   const saveGame = async () => {
     if (connexion) {
       try {
-        await AjoutHistorique({
+        await HistoriqueService.AjoutHistorique({
           user_id: userId,
           deck_id: id, // vous avez déjà l'id du deck dans les params
           turn_count: turn + 1,
@@ -96,7 +96,7 @@ const ReignsGame = () => {
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const cartes = await RecupererCartes(id, gameStarted);
+        const cartes = await DeckService.RecupererCartes(id, gameStarted);
         setCards(cartes);
         setRemainingCards(cartes.length);
       } catch (error) {

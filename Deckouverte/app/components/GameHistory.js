@@ -7,9 +7,9 @@ import {
   Pressable,
 } from "react-native";
 import { Coins, Users, Trash2 } from "lucide-react";
-import { buttonStyles } from "../styles/buttons.js";
-import { colors } from "../styles/colors.js";
-import { RecupererHistorique, DeleteHistorique } from "../fetch/Historique";
+import  buttonStyles  from "../styles/buttons.js";
+import  colors  from "../styles/colors.js";
+import HistoriqueService from "../fetch/Historique";
 
 export default function GameHistory({ userId, deckId }) {
   const [gameHistory, setGameHistory] = useState(null);
@@ -19,7 +19,7 @@ export default function GameHistory({ userId, deckId }) {
   useEffect(() => {
     const fetchGameHistory = async () => {
       try {
-        const reponse = await RecupererHistorique(userId, deckId);
+        const reponse = await HistoriqueService.RecupererHistorique(userId, deckId);
         setGameHistory(reponse.game_history);
         setLoading(false);
       } catch (error) {
@@ -33,7 +33,7 @@ export default function GameHistory({ userId, deckId }) {
 
   const Deletehistory = async (id) => {
     try {
-      await DeleteHistorique(id);
+      await HistoriqueService.DeleteHistorique(id);
       setGameHistory((prevHistory) =>
         prevHistory.filter((item) => item.id !== id)
       );

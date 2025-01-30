@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
-import { Login } from "./login";
-import { Register } from "./register";
+import  Login  from "./login";
+import  Register  from "./register";
 import { useGlobalSearchParams } from "expo-router/build/hooks";
 import { useRouter } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';

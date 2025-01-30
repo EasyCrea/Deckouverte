@@ -49,3 +49,13 @@ export const logoutCreateur = async () => {
   const response = await API.get("/createurs/logout");
   return response.data;
 };
+
+const authService = {
+  getAuthToken,
+  loginCreateur,
+  registerCreateur,
+  validateToken,
+  logoutCreateur,
+};
+
+export default authService;

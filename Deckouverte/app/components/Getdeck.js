@@ -18,10 +18,10 @@ import Svg, {
   Stop,
 } from "react-native-svg";
 import { useRouter } from "expo-router";
-import { buttonStyles } from "../styles/buttons";
-import { colors } from "../styles/colors";
-import { getAllDecks } from "../fetch/Deck";
-import { validateToken, getAuthToken } from "../fetch/Auth";
+import  buttonStyles  from "../styles/buttons";
+import  colors  from "../styles/colors";
+import DeckService from "../fetch/Deck";
+import authService  from "../fetch/Auth";
 import logoEasyCrea from "./../../assets/images/logo_easy_crea.png";
 
 
@@ -47,14 +47,14 @@ export default function Getdeck() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const tokenexist = await getAuthToken();
+        const tokenexist = await authService.getAuthToken();
         if (tokenexist) {
-          const serverResponse = await validateToken();
+          const serverResponse = await authService.validateToken();
           const id_createur = serverResponse.decoded.id;
           setIdCreateur(id_createur);
           setConnect(true);
         }
-        const response = await getAllDecks();
+        const response = await DeckService.getAllDecks();
         setDeck(response.data);
       } catch (error) {
         setError({

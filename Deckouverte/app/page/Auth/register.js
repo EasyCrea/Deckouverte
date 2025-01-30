@@ -12,18 +12,18 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
-import { registerCreateur } from "../../fetch/Auth";
+import authService from "../../fetch/Auth";
 import { Picker } from "@react-native-picker/picker";
 import { FontAwesome } from '@expo/vector-icons';
-import { buttonStyles } from "../../styles/buttons";
-import { colors } from "../../styles/colors";
+import  buttonStyles  from "../../styles/buttons";
+import  colors  from "../../styles/colors";
 import Svg, {
   Text as SvgText,
   Defs,
   LinearGradient,
   Stop,
 } from "react-native-svg";
-export function Register() {
+export default function Register() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     nom_createur: "",
@@ -61,7 +61,7 @@ export function Register() {
         ddn: formattedDate,
       };
 
-      await registerCreateur(data);
+      await authService.registerCreateur(data);
       router.push("/page/Auth/userconnexion?page=connexion");
     } catch (err) {
       setError(err.response?.data?.message || "Erreur lors de l'inscription.");

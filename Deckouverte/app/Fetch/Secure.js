@@ -1,14 +1,14 @@
-import { validateToken } from "./Auth";
+import  authService  from "./Auth";
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 
-export function Secure(){
+export default function Secure(){
     const router = useRouter();
 
     useEffect(() => {
         const token = async () => { 
             try  {
-                await validateToken();
+                await authService.validateToken();
             }
             catch (err) {
                 router.replace('/');
@@ -19,3 +19,4 @@ export function Secure(){
     }, []);
     return null; 
 }
+

@@ -15,7 +15,7 @@ import Svg, {
 } from "react-native-svg";
 import { Heart, Calendar, TrendingUp } from "lucide-react";
 import API from "../fetch/API";
-import { colors } from "../styles/colors";
+import  colors  from "../styles/colors";
 
 export default function GetDeckById({ deckId }) {
   const router = useRouter();

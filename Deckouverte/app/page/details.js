@@ -9,13 +9,13 @@ import {
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
-import { buttonStyles } from "../styles/buttons";
-import { colors } from "../styles/colors";
+import  buttonStyles  from "../styles/buttons";
+import  colors  from "../styles/colors";
 import GetDeckById from "../components/GetDeckById";
 import GetCardInDeck from "../components/GetCardInDeck";
 import { Heart } from "lucide-react-native";
-import { AjoutLike, RecupererLike, DeleteLike } from "../fetch/Like";
-import { validateToken } from "../fetch/Auth";
+import LikeService from "../fetch/Like";
+import authService from "../fetch/Auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function GameScreen() {
@@ -30,7 +30,7 @@ export default function GameScreen() {
     setLoading(true);
     setError(null);
     try {
-      const serverResponse = await validateToken();
+      const serverResponse = await authService.validateToken();
       if (!serverResponse) {
         setConnect(false);
         return;
@@ -38,10 +38,10 @@ export default function GameScreen() {
 
       const id_createur = serverResponse.decoded.id;
       if (!liked) {
-        await AjoutLike(id, id_createur);
+        await LikeService.AjoutLike(id, id_createur);
         setLiked(true);
       } else {
-        await DeleteLike(id, id_createur);
+        await LikeService.DeleteLike(id, id_createur);
         setLiked(false);
       }
     } catch (error) {
@@ -54,11 +54,11 @@ export default function GameScreen() {
 
   const checkConnectionAndLike = async () => {
     try {
-      const serverResponse = await validateToken();
+      const serverResponse = await authService.validateToken();
       if (serverResponse) {
         setConnect(true);
         const id_createur = serverResponse.decoded.id;
-        const userLike = await RecupererLike(id, id_createur);
+        const userLike = await LikeService.RecupererLike(id, id_createur);
         if (userLike.status === "success") {
           setLiked(true);
         }

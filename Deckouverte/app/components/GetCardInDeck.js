@@ -6,8 +6,8 @@ import {
   StyleSheet,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { getParticipants } from "../fetch/Deck";
-import { colors } from "../styles/colors";
+import DeckService from "../fetch/Deck";
+import  colors  from "../styles/colors";
 
 export default function GetCardInDeck({ deckId }) {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function GetCardInDeck({ deckId }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getParticipants(deckId);
+        const response = await DeckService.getParticipants(deckId);
         setCards(response);
       } catch (error) {
         setError({

@@ -36,3 +36,11 @@ export const RecupererHistorique = async (id_createur, id_deck) => {
     throw error;
   }
 };
+
+const HistoriqueService = {
+  AjoutHistorique,
+  DeleteHistorique,
+  RecupererHistorique,
+};
+
+export default HistoriqueService;

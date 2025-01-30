@@ -30,3 +30,11 @@ export const AjoutLike = async (id_deck, id_createur) => {
       throw error;
     }
   }
+
+const LikeService = {
+    AjoutLike,
+    RecupererLike,
+    DeleteLike,
+};
+
+export default LikeService;
