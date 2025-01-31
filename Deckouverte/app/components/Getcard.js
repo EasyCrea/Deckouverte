@@ -6,7 +6,6 @@ import {
   Dimensions,
   TouchableOpacity,
   Modal,
-  ImageBackground,
 } from "react-native";
 import { PanGestureHandler, State } from "react-native-gesture-handler";
 import Animated, {
@@ -45,8 +44,7 @@ const ReignsGame = () => {
   const cardOpacity = useSharedValue(1);
   const [userId, setUserId] = useState(null);
   const [connexion, setConnexion] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+
 
   const resetAnimationValues = () => {
     translateX.value = 0;
@@ -175,17 +173,17 @@ const ReignsGame = () => {
     if (nativeEvent.state === State.END) {
       const choice =
         nativeEvent.translationX > 100
-          ? "right"
-          : nativeEvent.translationX < -100
           ? "left"
+          : nativeEvent.translationX < -100
+          ? "right"
           : null;
 
       // Logique pour démarrer ou quitter le jeu
       if (!gameStarted) {
-        if (choice === "right") {
+        if (choice === "left") {
           setGameStarted(true);
           resetCardPosition();
-        } else if (choice === "left") {
+        } else if (choice === "right") {
           router.push("/page/home");
         }
         return;
@@ -394,13 +392,6 @@ const ReignsGame = () => {
               {/* Carte suivante */}
               {currentCardIndex + 1 < cards.length && (
                 <Animated.View style={[styles.cardBack, cardBackStyle]}>
-                  <ImageBackground
-                    source={{ uri: "https://preview.ibb.co/bF05wV/danask.png" }}
-                    style={styles.cardBackImage}
-                    resizeMode="repeat"
-                  >
-                    <View></View>
-                  </ImageBackground>
                 </Animated.View>
               )}
             </View>
@@ -408,91 +399,80 @@ const ReignsGame = () => {
         </>
       )}
 
-      <Modal visible={isVictory} transparent animationType="fade">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>🎉 Félicitations ! 🎉</Text>
-            <Text style={styles.modalText}>
-              Vous avez gagné en {turn} tours.
-            </Text>
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={() => router.push("/page/home")}
-            >
-              <Text style={styles.modalButtonText}>Quitter</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={() => {
-                // Réinitialiser tous les états
-                setIsVictory(false);
-                setIsGameOver(false);
-                setTurn(1);
-                setGameStates({ people: 10, treasury: 10 });
-                setCurrentCardIndex(0);
-                setRemainingCards(cards.length);
-
-                // S'assurer que l'animation est réinitialisée
-                if (translateX) {
-                  translateX.setValue(0);
-                }
-
-                // Réinitialiser les styles d'animation si nécessaire
-                if (animatedStyle) {
-                  animatedStyle.transform = [{ translateX: translateX }];
-                }
-
-                // Attendre que les états soient mis à jour avant de redémarrer
-                setTimeout(() => {
-                  setGameStarted(true);
-                }, 100);
-              }}
-            >
-              <Text style={styles.modalButtonText}>Recommencer</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+<Modal
+  visible={isVictory}
+  transparent
+  animationType="fade"
+  // Ajout des propriétés pour Android
+  hardwareAccelerated={true}
+  onRequestClose={() => setIsVictory(false)}
+>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <Text style={styles.modalTitle}>🎉 Félicitations ! 🎉</Text>
+      <Text style={styles.modalText}>
+        Vous avez gagné en {turn} tours.
+      </Text>
+      <TouchableOpacity
+        style={styles.modalButton}
+        onPress={() => router.push("/page/home")}
+        activeOpacity={0.7}
+      >
+        <Text style={styles.modalButtonText}>Quitter</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.modalButton}
+        onPress={() => {
+          setIsVictory(false);
+          setIsGameOver(false);
+          setTurn(1);
+          setGameStates({ people: 10, treasury: 10 });
+          setCurrentCardIndex(0);
+          setRemainingCards(cards.length);
+          if (translateX) {
+            translateX.setValue(0);
+          }
+          if (animatedStyle) {
+            animatedStyle.transform = [{ translateX: translateX }];
+          }
+          setTimeout(() => {
+            setGameStarted(true);
+          }, 100);
+        }}
+        // Ajout des propriétés pour Android
+        activeOpacity={0.7}
+      >
+        <Text style={styles.modalButtonText}>Recommencer</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
 
       {/* Modale de défaite */}
-      <Modal visible={isGameOver} transparent animationType="fade">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>💥 Défaite 💥</Text>
-            <Text style={styles.modalText}>
-              Votre partie s'est terminée après {turn} tours.
-            </Text>
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={() => router.push("/page/home")}
-            >
-              <Text style={styles.modalButtonText}>Quitter</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={() => {
-                // Réinitialiser les états du jeu
-                setIsVictory(false);
-                setIsGameOver(false);
-                setTurn(1);
-                setGameStates({ people: 10, treasury: 10 });
-                setCurrentCardIndex(0);
-                setRemainingCards(cards.length);
-                resetAnimationValues();
-                // Réinitialiser le jeu avec un petit délai
-                setTimeout(() => {
-                  setGameStarted(false); // D'abord mettre à false
-                  setTimeout(() => {
-                    setGameStarted(true); // Puis remettre à true pour "redémarrer"
-                  }, 50);
-                }, 50);
-              }}
-            >
-              <Text style={styles.modalButtonText}>Recommencer</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <Modal
+  visible={isGameOver}
+  transparent
+  animationType="fade"
+  hardwareAccelerated={true}
+  onRequestClose={() => setIsGameOver(false)}
+>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <Text style={styles.modalTitle}>💥 Défaite 💥</Text>
+      <Text style={styles.modalText}>
+        Votre partie s'est terminée après {turn} tours.
+      </Text>
+      <TouchableOpacity
+        style={styles.modalButton}
+        onPress={() => router.push("/page/home")}
+        activeOpacity={0.7}
+      >
+        <Text style={styles.modalButtonText}>Quitter</Text>
+      </TouchableOpacity>
+      
+    </View>
+  </View>
+</Modal>
     </View>
   );
 };
@@ -611,32 +591,58 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
+    position: 'absolute',
+    top: 350,
+    left: 180,
+    right:200,
+    bottom: 0,
   },
   modalContent: {
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
+    padding: 20,
     alignItems: "center",
+    justifyContent: "center",
+    height: 300,
+    width: 300,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    zIndex: 1000,
   },
   modalTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 15,
+    marginBottom: 20,
+    textAlign: "center",
+    color: "#333",
   },
   modalText: {
     fontSize: 18,
-    marginBottom: 20,
+    marginBottom: 30,
+    textAlign: "center",
+    color: "#333",
+    fontWeight: "600",
   },
   modalButton: {
     backgroundColor: "#4F46E5",
     borderRadius: 10,
-    padding: 10,
+    padding: 12,
+    width: "80%",
+    alignItems: "center",
+    marginVertical: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
     elevation: 2,
   },
   modalButtonText: {
     color: "white",
     fontWeight: "bold",
-    textAlign: "center",
+    fontSize: 16,
   },
 });
 
