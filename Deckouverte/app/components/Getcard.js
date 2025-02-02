@@ -297,7 +297,7 @@ const ReignsGame = () => {
 
   return (
     <View style={styles.container}>
-      {!gameStarted ? (
+      {!gameStarted  && !isGameOver ? (
         <PanGestureHandler
           onGestureEvent={handleGestureEvent}
           onHandlerStateChange={handleStateChange}
@@ -411,7 +411,13 @@ const ReignsGame = () => {
     <View style={styles.modalContent}>
       <Text style={styles.modalTitle}>🎉 Félicitations ! 🎉</Text>
       <Text style={styles.modalText}>
-        Vous avez gagné en {turn} tours.
+        Vous avez gagné.
+      </Text>
+      <Text style={styles.modalText}>
+      Population {gameStates.people}
+      </Text>
+      <Text style={styles.modalText}>
+      Trésorerie {gameStates.treasury}
       </Text>
       <TouchableOpacity
         style={styles.modalButton}
@@ -454,13 +460,19 @@ const ReignsGame = () => {
   transparent
   animationType="fade"
   hardwareAccelerated={true}
-  onRequestClose={() => setIsGameOver(false)}
+  onRequestClose={() => router.push("/page/home")}
 >
   <View style={styles.modalContainer}>
     <View style={styles.modalContent}>
       <Text style={styles.modalTitle}>💥 Défaite 💥</Text>
       <Text style={styles.modalText}>
         Votre partie s'est terminée après {turn} tours.
+      </Text>
+      <Text style={styles.modalText}>
+      Population {gameStates.people}
+      </Text>
+      <Text style={styles.modalText}>
+      Trésorerie {gameStates.treasury}
       </Text>
       <TouchableOpacity
         style={styles.modalButton}
