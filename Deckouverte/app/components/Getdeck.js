@@ -114,6 +114,9 @@ export default function Getdeck() {
                 year: "numeric",
               })}
             </Text>
+            <Text style={styles.playText}>
+              Cliquez pour jouer !
+            </Text>
           </View>
 
           <View style={styles.buttonsContainer}>
@@ -369,6 +372,11 @@ const styles = StyleSheet.create({
     color: "#6B7280",
     marginBottom: 2,
     fontStyle: "italic",
+  },
+  playText:{
+    marginTop: 15,
+    marginBottom: -5 ,
+    textAlign: "center",
   },
   detailsButton: {
     backgroundColor: "#5B3ADD",
