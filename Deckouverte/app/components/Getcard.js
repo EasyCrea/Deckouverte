@@ -327,7 +327,7 @@ const ReignsGame = () => {
           </Text>
           <Text style={styles.modalText}>Population : {gameStates.people}</Text>
           <Text style={styles.modalText}>Trésorerie : {gameStates.treasury}</Text>
-          
+          <View style={styles.modalButtonContainer}>
           <TouchableOpacity
             style={styles.modalButton}
             onPress={() => router.push("/page/home")}
@@ -346,6 +346,7 @@ const ReignsGame = () => {
           >
             <Text style={styles.modalButtonText}>Recommencer</Text>
           </TouchableOpacity>
+          </View>
         </View>
       ) : isVictory ? (
         /* Écran de victoire */
@@ -354,7 +355,7 @@ const ReignsGame = () => {
           <Text style={styles.modalText}>Vous avez gagné.</Text>
           <Text style={styles.modalText}>Population : {gameStates.people}</Text>
           <Text style={styles.modalText}>Trésorerie : {gameStates.treasury}</Text>
-  
+          <View style={styles.modalButtonContainer}>
           <TouchableOpacity
             style={styles.modalButton}
             onPress={() => router.push("/page/home")}
@@ -373,6 +374,7 @@ const ReignsGame = () => {
           >
             <Text style={styles.modalButtonText}>Recommencer</Text>
           </TouchableOpacity>
+          </View>
         </View>
       ) : (
         /* Partie en cours */
@@ -606,6 +608,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#333",
     fontWeight: "600",
+  },
+  modalButtonContainer: {
+    flexDirection: "column", 
+    alignItems: "center",     
+    justifyContent: "center", 
+    width: "100%",            
+    paddingHorizontal: 10,    
   },
   modalButton: {
     backgroundColor: "#4F46E5",
