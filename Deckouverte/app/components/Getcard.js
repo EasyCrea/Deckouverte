@@ -314,6 +314,7 @@ const ReignsGame = () => {
         >
           <Animated.View style={[styles.card, animatedStyle]}>
             <Text style={styles.eventText}>Voulez-vous commencer à jouer?</Text>
+            <Text style={styles.dateText}>Swiper la carte pour choisir</Text>
             <Animated.Text style={[styles.choiceLabelLeft]}>Retour</Animated.Text>
             <Animated.Text style={[styles.choiceLabelRight]}>Jouer</Animated.Text>
           </Animated.View>
@@ -490,6 +491,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     marginBottom: 20,
+  },
+  dateText: {
+    fontSize: 14,
+    color: "#6B7280",
+    marginBottom: 2,
+    marginTop: 15,
+    fontStyle: "italic",
   },
   indicatorContainer: {
     marginBottom: 15,
