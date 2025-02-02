@@ -45,7 +45,15 @@ const ReignsGame = () => {
   const [userId, setUserId] = useState(null);
   const [connexion, setConnexion] = useState(false);
 
+  const resetGame = () => {
+    setIsVictory(false);
+    setIsGameOver(false);
+    setTurn(1);
+    setGameStates({ people: 10, treasury: 10 });
+    setCurrentCardIndex(0);
+    setRemainingCards(cards.length);
 
+  };
   const resetAnimationValues = () => {
     translateX.value = 0;
     translateY.value = 0;
@@ -293,40 +301,93 @@ const ReignsGame = () => {
       [1, 0],
       Extrapolate.CLAMP
     ),
+    
   }));
 
   return (
     <View style={styles.container}>
-      {!gameStarted  && !isGameOver ? (
+      {/* Écran d'accueil */}
+      {!gameStarted && !isGameOver ? (
         <PanGestureHandler
           onGestureEvent={handleGestureEvent}
           onHandlerStateChange={handleStateChange}
         >
           <Animated.View style={[styles.card, animatedStyle]}>
             <Text style={styles.eventText}>Voulez-vous commencer à jouer?</Text>
-            <Animated.Text style={[styles.choiceLabelLeft]}>
-              Retour
-            </Animated.Text>
-            <Animated.Text style={[styles.choiceLabelRight]}>
-              Jouer
-            </Animated.Text>
+            <Animated.Text style={[styles.choiceLabelLeft]}>Retour</Animated.Text>
+            <Animated.Text style={[styles.choiceLabelRight]}>Jouer</Animated.Text>
           </Animated.View>
         </PanGestureHandler>
+      ) : isGameOver ? (
+        /* Écran de défaite */
+        <View style={styles.endScreen}>
+          <Text style={styles.modalTitle}>💥 Défaite 💥</Text>
+          <Text style={styles.modalText}>
+            Votre partie s'est terminée après {turn} tours.
+          </Text>
+          <Text style={styles.modalText}>Population : {gameStates.people}</Text>
+          <Text style={styles.modalText}>Trésorerie : {gameStates.treasury}</Text>
+          
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={() => router.push("/page/home")}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.modalButtonText}>Quitter</Text>
+          </TouchableOpacity>
+  
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={() => {
+              resetGame();
+              resetAnimationValues();
+            }}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.modalButtonText}>Recommencer</Text>
+          </TouchableOpacity>
+        </View>
+      ) : isVictory ? (
+        /* Écran de victoire */
+        <View style={styles.endScreen}>
+          <Text style={styles.modalTitle}>🎉 Félicitations ! 🎉</Text>
+          <Text style={styles.modalText}>Vous avez gagné.</Text>
+          <Text style={styles.modalText}>Population : {gameStates.people}</Text>
+          <Text style={styles.modalText}>Trésorerie : {gameStates.treasury}</Text>
+  
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={() => router.push("/page/home")}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.modalButtonText}>Quitter</Text>
+          </TouchableOpacity>
+  
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={() => {
+              resetGame();
+              resetAnimationValues();
+            }}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.modalButtonText}>Recommencer</Text>
+          </TouchableOpacity>
+        </View>
       ) : (
+        /* Partie en cours */
         <>
           <View style={styles.scoreHeader}>
             <View style={styles.scoreContainer}>
               <Text style={styles.scoreText}>Cartes: {remainingCards}</Text>
             </View>
-
+  
             <View style={styles.indicators}>
               {[
                 {
                   key: "people",
                   label: (
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
                       <Users size={20} color="black" />
                       <Text style={{ marginLeft: 5 }}>{gameStates.people}</Text>
                     </View>
@@ -335,13 +396,9 @@ const ReignsGame = () => {
                 {
                   key: "treasury",
                   label: (
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
                       <Coins size={20} color="black" />
-                      <Text style={{ marginLeft: 5 }}>
-                        {gameStates.treasury}
-                      </Text>
+                      <Text style={{ marginLeft: 5 }}>{gameStates.treasury}</Text>
                     </View>
                   ),
                 },
@@ -360,7 +417,7 @@ const ReignsGame = () => {
               ))}
             </View>
           </View>
-
+  
           <PanGestureHandler
             onGestureEvent={handleGestureEvent}
             onHandlerStateChange={handleStateChange}
@@ -388,103 +445,15 @@ const ReignsGame = () => {
                     : "Choix Droit"}
                 </Animated.Text>
               </Animated.View>
-
+  
               {/* Carte suivante */}
               {currentCardIndex + 1 < cards.length && (
-                <Animated.View style={[styles.cardBack, cardBackStyle]}>
-                </Animated.View>
+                <Animated.View style={[styles.cardBack, cardBackStyle]} />
               )}
             </View>
           </PanGestureHandler>
         </>
       )}
-
-<Modal
-  visible={isVictory}
-  transparent
-  animationType="fade"
-  // Ajout des propriétés pour Android
-  hardwareAccelerated={true}
-  onRequestClose={() => setIsVictory(false)}
->
-  <View style={styles.modalContainer}>
-    <View style={styles.modalContent}>
-      <Text style={styles.modalTitle}>🎉 Félicitations ! 🎉</Text>
-      <Text style={styles.modalText}>
-        Vous avez gagné.
-      </Text>
-      <Text style={styles.modalText}>
-      Population {gameStates.people}
-      </Text>
-      <Text style={styles.modalText}>
-      Trésorerie {gameStates.treasury}
-      </Text>
-      <TouchableOpacity
-        style={styles.modalButton}
-        onPress={() => router.push("/page/home")}
-        activeOpacity={0.7}
-      >
-        <Text style={styles.modalButtonText}>Quitter</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.modalButton}
-        onPress={() => {
-          setIsVictory(false);
-          setIsGameOver(false);
-          setTurn(1);
-          setGameStates({ people: 10, treasury: 10 });
-          setCurrentCardIndex(0);
-          setRemainingCards(cards.length);
-          if (translateX) {
-            translateX.setValue(0);
-          }
-          if (animatedStyle) {
-            animatedStyle.transform = [{ translateX: translateX }];
-          }
-          setTimeout(() => {
-            setGameStarted(true);
-          }, 100);
-        }}
-        // Ajout des propriétés pour Android
-        activeOpacity={0.7}
-      >
-        <Text style={styles.modalButtonText}>Recommencer</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-</Modal>
-
-      {/* Modale de défaite */}
-      <Modal
-  visible={isGameOver}
-  transparent
-  animationType="fade"
-  hardwareAccelerated={true}
-  onRequestClose={() => router.push("/page/home")}
->
-  <View style={styles.modalContainer}>
-    <View style={styles.modalContent}>
-      <Text style={styles.modalTitle}>💥 Défaite 💥</Text>
-      <Text style={styles.modalText}>
-        Votre partie s'est terminée après {turn} tours.
-      </Text>
-      <Text style={styles.modalText}>
-      Population {gameStates.people}
-      </Text>
-      <Text style={styles.modalText}>
-      Trésorerie {gameStates.treasury}
-      </Text>
-      <TouchableOpacity
-        style={styles.modalButton}
-        onPress={() => router.push("/page/home")}
-        activeOpacity={0.7}
-      >
-        <Text style={styles.modalButtonText}>Quitter</Text>
-      </TouchableOpacity>
-      
-    </View>
-  </View>
-</Modal>
     </View>
   );
 };
