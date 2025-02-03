@@ -181,17 +181,17 @@ const ReignsGame = () => {
     if (nativeEvent.state === State.END) {
       const choice =
         nativeEvent.translationX > 100
-          ? "left"
-          : nativeEvent.translationX < -100
           ? "right"
+          : nativeEvent.translationX < -100
+          ? "left"
           : null;
 
       // Logique pour démarrer ou quitter le jeu
       if (!gameStarted) {
-        if (choice === "left") {
+        if (choice === "right") {
           setGameStarted(true);
           resetCardPosition();
-        } else if (choice === "right") {
+        } else if (choice === "left") {
           router.push("/page/home");
         }
         return;
@@ -315,8 +315,8 @@ const ReignsGame = () => {
           <Animated.View style={[styles.card, animatedStyle]}>
             <Text style={styles.eventText}>Voulez-vous commencer à jouer?</Text>
             <Text style={styles.dateText}>Swiper la carte pour choisir</Text>
-            <Animated.Text style={[styles.choiceLabelLeft]}>Retour</Animated.Text>
-            <Animated.Text style={[styles.choiceLabelRight]}>Jouer</Animated.Text>
+            <Animated.Text style={[styles.choiceLabelRight]}>Retour</Animated.Text>
+            <Animated.Text style={[styles.choiceLabelLeft]}>Jouer</Animated.Text>
           </Animated.View>
         </PanGestureHandler>
       ) : isGameOver ? (
@@ -437,14 +437,14 @@ const ReignsGame = () => {
                   style={[styles.choiceLabelLeft, choiceLabelLeftStyle]}
                 >
                   {cards[currentCardIndex]
-                    ? cards[currentCardIndex].choice_2
+                    ? cards[currentCardIndex].choice_1
                     : "Choix Gauche"}
                 </Animated.Text>
                 <Animated.Text
                   style={[styles.choiceLabelRight, choiceLabelRightStyle]}
                 >
                   {cards[currentCardIndex]
-                    ? cards[currentCardIndex].choice_1
+                    ? cards[currentCardIndex].choice_2
                     : "Choix Droit"}
                 </Animated.Text>
               </Animated.View>
@@ -566,16 +566,23 @@ const styles = StyleSheet.create({
     top: 20,
     left: 10,
     fontSize: 18,
-    color: "green",
     fontWeight: "bold",
+    color: "#16a165",
+    backgroundColor: "#e3f9f1",
+    padding: 10,
+    borderRadius: 10,
+    
   },
   choiceLabelRight: {
     position: "absolute",
     top: 20,
     right: 10,
     fontSize: 18,
-    color: "red",
+    color: "#e0245e",
     fontWeight: "bold",
+    backgroundColor: "#fce8ec",
+    padding: 10,
+    borderRadius: 10,
   },
   modalContainer: {
     flex: 1,
