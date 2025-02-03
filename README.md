@@ -3,7 +3,7 @@
     <img src="./assets/images/adaptive-icon.png" align="center" width="30%">
 </p>
 
-### *Un jeu de cartes narratif interactif basé sur la prise de décision*
+## *Un jeu de cartes narratif interactif basé sur la prise de décision*
 
 <p align="center">
    <img src="https://img.shields.io/github/license/EasyCrea/Deckouverte?style=default&logo=opensourceinitiative&logoColor=white&color=0080ff" alt="license">
