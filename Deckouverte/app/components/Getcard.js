@@ -80,25 +80,35 @@ const ReignsGame = () => {
     };
     getUserId();
   }, []);
+  useEffect(() => {
+    if (isGameOver) {
+      saveGame();
+    }
+  }, [isGameOver]);
 
   const saveGame = async () => {
-    if (connexion) {
-      try {
-        await HistoriqueService.AjoutHistorique({
-          user_id: userId,
-          deck_id: id, // vous avez déjà l'id du deck dans les params
-          turn_count: turn + 1,
-          final_people: gameStates.people,
-          final_treasury: gameStates.treasury,
-          is_winner: isVictory === true ? 1 : 0,
-        });
-      } catch (error) {
-        console.error("Erreur lors de l'enregistrement de la victoire:", error);
-      }
-    } else {
-      console.log("utilisateur non connecté");
+  if (connexion) {
+    try {
+      await HistoriqueService.AjoutHistorique({
+        user_id: userId,
+        deck_id: id,
+        turn_count: turn + 1,
+        final_people: gameStates.people,
+        final_treasury: gameStates.treasury,
+        is_winner: isVictory === true ? 1 : 0,
+      });
+      console.log("Historique enregistré avec succès");
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement de la victoire:", error);
     }
-  };
+  } else {
+    console.log("utilisateur non connecté");
+  }
+};
+const handleEndGame = (victory) => {
+  setIsVictory(victory); 
+  setIsGameOver(true); 
+};
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -185,7 +195,7 @@ const ReignsGame = () => {
           : nativeEvent.translationX < -100
           ? "left"
           : null;
-
+  
       // Logique pour démarrer ou quitter le jeu
       if (!gameStarted) {
         if (choice === "right") {
@@ -196,12 +206,12 @@ const ReignsGame = () => {
         }
         return;
       }
-
+  
       // Si une direction valide est sélectionnée
       if (choice && cards[currentCardIndex]) {
         // Animer le rejet de la carte
         animateCardDismissal(choice);
-
+  
         // Gérer la logique de jeu après l'animation
         setTimeout(() => {
           const card = cards[currentCardIndex];
@@ -217,16 +227,16 @@ const ReignsGame = () => {
                   people: card.population_impact_1,
                   treasury: card.finance_impact_1,
                 };
-
+  
           const newGameStates = {
             people: gameStates.people + impact.people,
             treasury: gameStates.treasury + impact.treasury,
           };
-
+  
           setGameStates(newGameStates);
           setTurn((prev) => prev + 1);
           setRemainingCards((prev) => prev - 1);
-
+  
           // Vérification des conditions de défaite
           if (
             turn >= 3 &&
@@ -237,17 +247,17 @@ const ReignsGame = () => {
               remainingCards <= 0)
           ) {
             setIsGameOver(true);
-            saveGame();
+            handleEndGame(false);
             return;
           }
-
+  
           // Vérification des conditions de victoire
           if (turn >= cards.length) {
             setIsVictory(true);
-            saveGame();
+            handleEndGame(true);
             return;
           }
-
+  
           // Passer à la carte suivante
           setCurrentCardIndex((prevIndex) => (prevIndex + 1) % cards.length);
           resetCardPosition();
@@ -258,6 +268,7 @@ const ReignsGame = () => {
       }
     }
   };
+  
 
   const animatedStyle = useAnimatedStyle(() => {
     const rotateYString = `${rotateY.value}deg`;
