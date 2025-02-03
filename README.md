@@ -1,50 +1,137 @@
-# Welcome to your Expo app 👋
+# **DECKOUVERTE**  
+<p align="center">
+    <img src="./assets/images/adaptive-icon.png" align="center" width="30%">
+</p>
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+### *Un jeu de cartes narratif interactif basé sur la prise de décision*
 
-## Get started
+<p align="center">
+   <img src="https://img.shields.io/github/license/EasyCrea/Deckouverte?style=default&logo=opensourceinitiative&logoColor=white&color=0080ff" alt="license">
+   <img src="https://img.shields.io/github/last-commit/EasyCrea/Deckouverte?style=default&logo=git&logoColor=white&color=0080ff" alt="last-commit">
+   <img src="https://img.shields.io/github/languages/top/EasyCrea/Deckouverte?style=default&color=0080ff" alt="repo-top-language">
+   <img src="https://img.shields.io/github/languages/count/EasyCrea/Deckouverte?style=default&color=0080ff" alt="repo-language-count">
+</p>
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## 📌 Table des Matières  
 
-2. Start the app
+- [Aperçu](#-aperçu)  
+- [Fonctionnalités](#-fonctionnalités)  
+- [Technologies utilisées](#-technologies-utilisées)  
+- [Structure du Projet](#-structure-du-projet)  
+- [Démarrage](#-démarrage)  
+  - [Prérequis](#-prérequis)  
+  - [Installation](#-installation)  
+  - [Usage](#-usage)  
+- [Contribuer](#-contribuer)  
 
-   ```bash
-    npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## 🎮 **Aperçu**  
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Deckouverte est une application mobile de type **jeu narratif interactif** développée avec **React Native** et **Expo**.  
+Inspirée du jeu **Reigns**, elle propose une expérience immersive où chaque choix impacte dynamiquement la **population** et la **trésorerie** du joueur.  
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+<p align="center">
+    <img src="./assets/images/preview.gif" width="60%">
+</p>
 
-## Get a fresh project
+---
 
-When you're ready, run:
+## ✨ **Fonctionnalités**  
 
-```bash
-npm run reset-project
+✅ **Gameplay inspiré de Reigns** avec des choix stratégiques  
+📚 **Multiples decks de cartes** avec des scénarios variés  
+📊 **Gestion dynamique** de la population et de la trésorerie  
+📱 **Interface fluide et intuitive**  
+🚀 **Compatibilité multiplateforme** (iOS et Android)  
+
+---
+
+## 🛠️ **Technologies utilisées**  
+
+- **React Native** - Développement mobile  
+- **Expo** - Simplification du déploiement  
+- **TypeScript** - Typage statique  
+- **React Navigation** - Gestion de la navigation  
+
+---
+
+## 📂 **Structure du Projet**  
+
+```sh
+└── Deckouverte/
+    ├── README.md
+    ├── app
+    │   ├── _layout.js
+    │   ├── components
+    │   ├── fetch
+    │   ├── global.css
+    │   ├── index.js
+    │   ├── page
+    │   └── styles
+    ├── app.json
+    ├── assets
+    │   └── images
+    ├── eas.json
+    ├── package.json
+    └── tsconfig.json
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## 🚀 **Démarrage**  
 
-To learn more about developing your project with Expo, look at the following resources:
+### ✅ **Prérequis**  
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Avant de commencer, assurez-vous d'avoir installé :  
 
-## Join the community
+- **Node.js** et **npm** ou **yarn**  
+- **Expo CLI** (`npm install -g expo-cli`)  
+- Un émulateur iOS/Android ou l'application **Expo Go** sur un appareil mobile  
 
-Join our community of developers creating universal apps.
+### 👅 **Installation**  
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Installez Deckouverte en suivant ces étapes :  
+
+1⃣ **Clonez le dépôt** :  
+```sh
+git clone https://github.com/EasyCrea/Deckouverte.git
+```
+
+2⃣ **Accédez au dossier du projet** :  
+```sh
+cd Deckouverte
+```
+
+3⃣ **Installez les dépendances** :  
+```sh
+npm install
+```
+
+4⃣ **Lancez le projet** :  
+```sh
+npx expo start
+```
+
+---
+
+## 🤝 **Contribuer**  
+
+Nous accueillons volontiers toute contribution ! Pour contribuer :  
+
+1. **Forkez** le projet 📌  
+2. **Créez une branche feature** (`git checkout -b ma-feature`) 🌱  
+3. **Effectuez vos modifications et commit** (`git commit -m 'Ajout d'une nouvelle feature'`) ✅  
+4. **Poussez la branche** (`git push origin ma-feature`) 🚀  
+5. **Ouvrez une Pull Request** ! 🎉  
+
+### 👥 **Contributeurs**  
+
+- [Malo Caparros](https://github.com/malocaparros)  
+- [Eliot Pouplier](https://github.com/eliotpouplier)  
+- [Léo Tarpin](https://github.com/leotarpin)  
+
+Merci pour votre soutien et vos contributions ! 🎯  
+
