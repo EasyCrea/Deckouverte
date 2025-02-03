@@ -32,7 +32,7 @@ export default function HistoriqueScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Image source={logoEasyCrea} style={styles.logo} />
-        <Svg height={80} width="auto" style={styles.titleContainer}>
+        <Svg height={80} width="300" style={styles.titleContainer}>
           <Defs>
             <LinearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
               <Stop offset="0%" stopColor="#6366f1" stopOpacity="1" />
