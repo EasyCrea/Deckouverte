@@ -6,7 +6,6 @@
 ## *Un jeu de cartes narratif interactif basé sur la prise de décision*
 
 <p align="center">
-   <img src="https://img.shields.io/github/license/EasyCrea/Deckouverte?style=default&logo=opensourceinitiative&logoColor=white&color=0080ff" alt="license">
    <img src="https://img.shields.io/github/last-commit/EasyCrea/Deckouverte?style=default&logo=git&logoColor=white&color=0080ff" alt="last-commit">
    <img src="https://img.shields.io/github/languages/top/EasyCrea/Deckouverte?style=default&color=0080ff" alt="repo-top-language">
    <img src="https://img.shields.io/github/languages/count/EasyCrea/Deckouverte?style=default&color=0080ff" alt="repo-language-count">
@@ -54,7 +53,7 @@ Inspirée du jeu **Reigns**, elle propose une expérience immersive où chaque c
 - **React Native** - Développement mobile  
 - **Expo** - Simplification du déploiement  
 - **TypeScript** - Typage statique  
-- **React Navigation** - Gestion de la navigation  
+- **React router** - Gestion de la navigation  
 
 ---
 
