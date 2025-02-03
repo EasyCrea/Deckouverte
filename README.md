@@ -44,7 +44,7 @@ Inspirée du jeu **Reigns**, elle propose une expérience immersive où chaque c
 📚 **Multiples decks de cartes** avec des scénarios variés  
 📊 **Gestion dynamique** de la population et de la trésorerie  
 📱 **Interface fluide et intuitive**  
-🚀 **Compatibilité multiplateforme** (iOS et Android)  
+🚀 **application téléphone** (Android)  
 
 ---
 
