@@ -4,6 +4,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import CardSwipe from "./../components/Getcard";
 import { AntDesign } from "@expo/vector-icons";
 import logoEasyCrea from "./../../assets/images/logo_easy_crea.png";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function GameScreen() {
   const { id } = useLocalSearchParams();
@@ -11,7 +12,7 @@ export default function GameScreen() {
   const [isRulesVisible, setIsRulesVisible] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Image source={logoEasyCrea} style={styles.logo} />
 
       <View style={styles.buttonsContainer}>
@@ -70,7 +71,7 @@ export default function GameScreen() {
           </View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 }
 
